@@ -40,7 +40,6 @@ var ViewModel = function() {
 	this.fetchLoc = function() {
 		self.currentLoc(this);
 	};
-	console.log("ViewModel loaded");
 };
 
 ko.applyBindings( new ViewModel() );

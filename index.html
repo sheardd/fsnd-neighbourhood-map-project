@@ -17,12 +17,13 @@
 		</div>
 		<div id="list-container">
 			<ul id="locations-list" data-bind="foreach: locations">
-				<li><strong data-bind="text: name, click: fetchLoc"></strong>
+				<li><strong data-bind="text: name, click: $parent.fetchLoc"></strong>
 				<p data-bind="text: address"></p> <p data-bind="text: description">
 				</p></li>
 			</ul>
 		</div>
 	</div>
-	<script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"></script>
+	<script src="bower_components/knockout/dist/knockout.js"></script>
+	<script src="app.js"></script>
 </body>
 </html>
