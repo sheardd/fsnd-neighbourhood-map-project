@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Neighbourhood Map</title>
+</head>
+<body>
+	<div id="map-container">
+		<!-- Our Map Container -->
+	</div>
+	<div id="overlay">
+		<div id="current-location" data-bind="with: currentLoc">
+			<img id="current-location-img"
+			data-bind="attrib: {src, imgSrc attrib: {alt, imgAlt}}">
+			<h2 data-bind="text: name"></h2>
+			<p data-bind="text: address"></p>
+			<p data-bind="text: description"></p>
+		</div>
+		<div id="list-container">
+			<ul id="locations-list" data-bind="foreach: locations">
+				<li><strong data-bind="text: name, click: fetchLoc"></strong>
+				<p data-bind="text: address"></p> <p data-bind="text: description">
+				</p></li>
+			</ul>
+		</div>
+	</div>
+	<script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"></script>
+</body>
+</html>
