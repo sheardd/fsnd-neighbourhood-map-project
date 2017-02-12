@@ -50,7 +50,7 @@ var GoogleMapsVM = function() {
 		mapsCallback.html( this.mapsCallback() );
 
 		var gMapsUrl = "https://maps.googleapis.com/maps/api/js?" +
-			"key=AIzaSyC1TZRJK7_lN0GZhEDga7vPu8pm_v7qWIQ&callback=initMap";
+			"key=AIzaSyC1TZRJK7_lN0GZhEDga7vPu8pm_v7qWIQ&callback=initMap&libraries=places";
 		var mapsScript = $("<script>", {
 			"src": gMapsUrl,
 		});
@@ -65,8 +65,8 @@ var GoogleMapsVM = function() {
 		callbackString += "var map;";
 		callbackString += "function initMap() {";
 		callbackString += "	map = new google.maps.Map(document.getElementById('map'), {";
-		callbackString += " zoom: 2,";
-		callbackString += "	center: new google.maps.LatLng(2.8,-187.3),";
+		callbackString += " zoom: 17,";
+		callbackString += "	center: new google.maps.LatLng(50.263201, -5.051041),";
 		callbackString += "	mapTypeId: 'terrain'";
 		callbackString += "	} ); }";
 		return callbackString;
