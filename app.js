@@ -1,23 +1,31 @@
+var map;
+
 var gMapsInit = function() {
+	var truro = new google.maps.LatLng(50.263197, -5.051041);
 	map = new google.maps.Map(document.getElementById('map'), {
 		zoom: 17,
-		center: new google.maps.LatLng(50.263197, -5.051041),
+		center: truro,
 		mapTypeId: 'terrain'
 	});
 
-	// // Create a <script> tag and set the USGS URL as the source.
-	// var script = document.createElement('script');
-	// // This example uses a local copy of the GeoJSON stored at
-	// // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
-	// script.src = 'https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js';
-	// document.getElementsByTagName('head')[0].appendChild(script);
+	for (var i = 0; i < locModel.length; i++) {
+		var coords = locModel[i].coords;
+		var latLng = new google.maps.LatLng(coords[0],coords[1]);
+		map.center = latLng;
+		var marker = new google.maps.Marker({
+			position: latLng,
+			map: map
+		});
 	};
+	map.center = truro;
+
+};
 
 var locModel = [
 	{
 		name: "Chantek",
 		address: "",
-		coords: (50.263786, -5.048547),
+		coords: [50.263786, -5.048547],
 		description: "",
 		imgSrc: "",
 		imgAlt: ""
@@ -25,7 +33,7 @@ var locModel = [
 	{
 		name: "Habanero's Burrito Bar",
 		address: "",
-		coords: (50.262962, -5.055009),
+		coords: [50.262962, -5.055009],
 		description: "",
 		imgSrc: "",
 		imgAlt: ""
@@ -33,7 +41,7 @@ var locModel = [
 	{
 		name: "Sonder Cafe Bar",
 		address: "",
-		coords: (50.263139, -5.049306),
+		coords: [50.263139, -5.049306],
 		description: "",
 		imgSrc: "",
 		imgAlt: ""
@@ -41,7 +49,7 @@ var locModel = [
 	{
 		name: "Pierro's Pizzeria",
 		address: "",
-		coords: (50.263132, -5.054528),
+		coords: [50.263132, -5.054528],
 		description: "",
 		imgSrc: "",
 		imgAlt: ""
@@ -49,7 +57,7 @@ var locModel = [
 	{
 		name: "Mustard and Rye",
 		address: "",
-		coords: (50.262301, -5.054735),
+		coords: [50.262301, -5.054735],
 		description: "",
 		imgSrc: "",
 		imgAlt: ""
@@ -57,7 +65,7 @@ var locModel = [
 	{
 		name: "Hubbox",
 		address: "",
-		coords: (50.263206, -5.054040),
+		coords: [50.263206, -5.054040],
 		description: "",
 		imgSrc: "",
 		imgAlt: ""
