@@ -8,18 +8,37 @@ var gMapsInit = function() {
 		mapTypeId: 'terrain'
 	});
 
+	var infowindowArray = []; //this line - MAYBE TRY DECLARING LOOP VARIALS HERE FIRST?
 	for (var i = 0; i < locModel.length; i++) {
 		var coords = locModel[i].coords;
 		var latLng = new google.maps.LatLng(coords[0],coords[1]);
 		map.center = latLng;
+		var infowindow = newInfoWindow(locModel[i]); // this line
+		infowindowArray.push(infowindow); // this line
+		console.log(infowindowArray[i]); // this line
 		var marker = new google.maps.Marker({
 			position: latLng,
-			map: map
+			map: map,
+			title: locModel[i].name,
 		});
-	};
-	map.center = truro;
+		marker.addListener('click', (function(savedMarker) {
+			return function() {
+				infowindowArray[i].open(map, savedMarker); // this line
+		};
+		})(marker));
 
+	};
+
+	map.center = truro;
 };
+
+function newInfoWindow(place) {
+	var infowindow = new google.maps.InfoWindow({
+		content: "<h4>" + place.name + "</h4>" // can we mod this line to outsource to another func and load more info?
+	});
+	return infowindow;
+}
+
 
 var locModel = [
 	{
