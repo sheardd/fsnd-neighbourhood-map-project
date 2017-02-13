@@ -1,25 +1,67 @@
+var gMapsInit = function() {
+	map = new google.maps.Map(document.getElementById('map'), {
+		zoom: 17,
+		center: new google.maps.LatLng(50.263197, -5.051041),
+		mapTypeId: 'terrain'
+	});
+
+	// // Create a <script> tag and set the USGS URL as the source.
+	// var script = document.createElement('script');
+	// // This example uses a local copy of the GeoJSON stored at
+	// // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
+	// script.src = 'https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js';
+	// document.getElementsByTagName('head')[0].appendChild(script);
+	};
+
 var locModel = [
 	{
-		name: "Bob's Burgers",
-		address: "Lanner Mill, Trispen, Truro, Cornwall, TR4 9AX",
-		description: "Just a Family Burger Place",
-		imgSrc: "https://bullseye-prod.aggrego.org/wp-ag/wp-content/uploads/sites/72/2015/10/bobs-8-1024x565.png?o=eyJ4IjowLjUsInkiOjAuNSwid2lkdGgiOjEyNzIsImhlaWdodCI6NzAyfQ%3D%3D&s=xM39ocCRLxxE4J1enOeqczNJtJI%3D",
-		imgAlt: "Bob's Burgers' storefront"
+		name: "Chantek",
+		address: "",
+		coords: (50.263786, -5.048547),
+		description: "",
+		imgSrc: "",
+		imgAlt: ""
 	},
 	{
-		name: "Mettricks Tea & Coffee",
-		address: "1 Bargate, Southampton, Hants",
-		description: "Better Tea & Coffee",
-		imgSrc: "https://static.wixstatic.com/media/ccb5e2_5f71ffce89d4a915693e5c0d33e1f140.png_srz_320_163_85_22_0.50_1.20_0.00_png_srz",
-		imgAlt: "Mettricks Logo"
+		name: "Habanero's Burrito Bar",
+		address: "",
+		coords: (50.262962, -5.055009),
+		description: "",
+		imgSrc: "",
+		imgAlt: ""
 	},
 	{
 		name: "Sonder Cafe Bar",
-		address: "Opposite the back of the Pannier Market, Truro",
-		description: "Our coffee is cheap and drinkable, and our snack portions are massive",
-		imgSrc: "https://pbs.twimg.com/profile_images/715201855203180544/DNS-6AB9.jpg",
-		imgAlt: "Sonder Logo"
+		address: "",
+		coords: (50.263139, -5.049306),
+		description: "",
+		imgSrc: "",
+		imgAlt: ""
 	},
+	{
+		name: "Pierro's Pizzeria",
+		address: "",
+		coords: (50.263132, -5.054528),
+		description: "",
+		imgSrc: "",
+		imgAlt: ""
+	},
+	{
+		name: "Mustard and Rye",
+		address: "",
+		coords: (50.262301, -5.054735),
+		description: "",
+		imgSrc: "",
+		imgAlt: ""
+	},
+	{
+		name: "Hubbox",
+		address: "",
+		coords: (50.263206, -5.054040),
+		description: "",
+		imgSrc: "",
+		imgAlt: ""
+	}
 ];
 
 var Location = function(data) {
@@ -46,34 +88,13 @@ var GoogleMapsVM = function() {
 	var self = this;
 
 	this.init = function() {
-		var mapsCallback = $("<script>");
-		mapsCallback.html( this.mapsCallback() );
-
-		var gMapsUrl = "https://maps.googleapis.com/maps/api/js?" +
-			"key=AIzaSyC1TZRJK7_lN0GZhEDga7vPu8pm_v7qWIQ&callback=initMap&libraries=places";
-		var mapsScript = $("<script>", {
-			"src": gMapsUrl,
-		});
-		mapsScript[0].setAttribute("async", "");
-		mapsScript[0].setAttribute("defer", "");
-		$('body').append(mapsCallback);
-		$('body').append(mapsScript);
 	};
 
 	this.mapsCallback = function() {
-		var callbackString = "";
-		callbackString += "var map;";
-		callbackString += "function initMap() {";
-		callbackString += "	map = new google.maps.Map(document.getElementById('map'), {";
-		callbackString += " zoom: 17,";
-		callbackString += "	center: new google.maps.LatLng(50.263201, -5.051041),";
-		callbackString += "	mapTypeId: 'terrain'";
-		callbackString += "	} ); }";
-		return callbackString;
 	};
 
 	this.init();
 };
 
-GoogleMapsVM();
+// GoogleMapsVM();
 ko.applyBindings( new ViewModel() );
