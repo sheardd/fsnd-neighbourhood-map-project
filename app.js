@@ -13,21 +13,24 @@ var gMapsInit = function() {
 		var coords = locModel[i].coords;
 		var latLng = new google.maps.LatLng(coords[0],coords[1]);
 		map.center = latLng;
-		var infowindow = newInfoWindow(locModel[i]);
 		var marker = new google.maps.Marker({
 			position: latLng,
 			map: map,
 			title: locModel[i].name,
+			infowindow: newInfoWindow(locModel[i]),
 		});
-		marker.addListener('click', (function(savedMarker, savedInfoWindow) {
+		marker.set("type", "point");
+		marker.set("id", "marker-" + i);
+		marker.addListener('click', (function(savedMarker) {
 			return function() {
-				savedInfoWindow.open(map, savedMarker);
-				// $('#map').click(function() {
-				// 	savedInfoWindow.close();
-				// });
-		};
-		})(marker, infowindow));
-
+				savedMarker.infowindow.open(map, savedMarker);
+			};
+		})(marker));
+		$('body').not('#' + marker.id).click((function(savedMarker) {
+			return function (){
+				savedMarker.infowindow.close();
+			};
+		})(marker));
 	};
 
 	map.center = truro;
