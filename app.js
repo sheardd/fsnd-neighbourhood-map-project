@@ -149,19 +149,42 @@ var ViewModel = function() {
 	this.fetchLoc = function() {
 		self.currentLoc(this);
 	};
+	this.textFilterInput = ko.observable("");
+	this.filteredLocations = ko.computed(function(){
+		var 
+		return;
+	}, this);
+	this.filterByTextInput = function(filterString) {
+		var filterArray = filterString.split(","); // filter on commas first to give us keyword phrases
+		if (!filterArray.prototype.trim) { // trim() workaround for older browsers, courtesy of developer.mozilla.org
+			filterArray.prototype.trim = function () {
+				return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+			};
+		};
+		filterArray.forEach(function(phrase) { // tidy up our keyword phrases to filter on
+			phrase = phrase.trim();
+		});
+		self.filter('keywords', filterArray);
+	};
+	this.filter = function(property, locArray, filters) {
+		var results = [];
+		locArray.forEach(function(location) {
+				filters.forEach(function(filter) {
+					console.log(location.property); // just checks we're getting property's value not its key
+					if typeof location.property === 'string' {
+						if location.property.includes(filter) {
+							results.push(location);
+							break;
+						};
+					} else {
+						if $.inArray(filter, location.property) {
+							results.push(location);
+							break;
+						};
+					};
+				});
+		return results;
+	};
 };
 
-var GoogleMapsVM = function() {
-	var self = this;
-
-	this.init = function() {
-	};
-
-	this.mapsCallback = function() {
-	};
-
-	this.init();
-};
-
-// GoogleMapsVM();
 ko.applyBindings( new ViewModel() );

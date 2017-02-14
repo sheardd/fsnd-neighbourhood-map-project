@@ -16,7 +16,8 @@
 			<p data-bind="text: description"></p>
 		</div>
 		<div id="filter-controls">
-			<input type="text" data-bind="text-filter">
+			<p>Filter Results: <input data-bind="textInput: textFilterInput"></p>
+			<!-- <input type="submit" data-bind="submit: textFilter"> TRY SETTING KEYPRESS FILTER ON TEXT-BOX FIRST, IF IT DOESN'T WORK USE THIS-->
 		</div>
 		<div id="list-container">
 			<ul id="locations-list" data-bind="foreach: locations">
