@@ -52,12 +52,8 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		categories: [
-			{
-				type: 'Restaurant',
-				keywords: ['Asian']
-			}
-		]
+		type: 'Restaurant',
+		keywords: ['Asian']
 	},
 	{
 		name: "Habanero's Burrito Bar",
@@ -66,12 +62,8 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		categories: [
-			{
-				type: 'Restaurant',
-				keywords: ['Mexican', 'Fast Food', 'Street Food']
-			}
-		]
+		type: 'Restaurant',
+		keywords: ['Mexican', 'Fast Food', 'Street Food']
 	},
 	{
 		name: "Sonder Cafe Bar",
@@ -80,12 +72,8 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		categories: [
-			{
-				type: 'Restaurant',
-				keywords: ['Bar & Grill']
-			}
-		]
+		type: 'Restaurant',
+		keywords: ['Bar & Grill']
 	},
 	{
 		name: "Pierro's Pizzeria",
@@ -94,12 +82,8 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		categories: [
-			{
-				type: 'Restaurant',
-				keywords: ['Italian']
-			}
-		]
+		type: 'Restaurant',
+		keywords: ['Italian']
 	},
 	{
 		name: "Mustard and Rye",
@@ -108,12 +92,8 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		categories: [
-			{
-				type: 'Restaurant',
-				keywords: ['Bar & Grill', 'BBQ', 'Burger']
-			}
-		]
+		type: 'Restaurant',
+		keywords: ['Bar & Grill', 'BBQ', 'Burger']
 	},
 	{
 		name: "Hubbox",
@@ -122,12 +102,8 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		categories: [
-			{
-				type: 'Restaurant',
-				keywords: ['Burger', 'Bar & Grill']
-			}
-		]
+		type: 'Restaurant',
+		keywords: ['Burger', 'Bar & Grill']
 	}
 ];
 
@@ -137,54 +113,64 @@ var Location = function(data) {
 	this.description = ko.observable(data.description);
 	this.imgSrc = ko.observable(data.imgSrc);
 	this.imgAlt = ko.observable(data.imgAlt);
+	this.type = ko.observable(data.type);
+	this.keywords = ko.observableArray(data.keywords);
 }
 
 var ViewModel = function() {
+	// initialisation
 	var self = this;
-	this.locations = ko.observableArray([]);
+	this.initLocations = ko.observableArray([]);
 	locModel.forEach(function(locItem) {
-		self.locations.push( new Location(locItem) );
+		self.initLocations.push( new Location(locItem) );
 	});
+	// define currentLoc and the function to set it
 	this.currentLoc = ko.observable();
 	this.fetchLoc = function() {
 		self.currentLoc(this);
 	};
+	// filter by text input
 	this.textFilterInput = ko.observable("");
-	this.filteredLocations = ko.computed(function(){
-		var 
-		return;
-	}, this);
-	this.filterByTextInput = function(filterString) {
+	this.formatTextInput = function(filterString) {
 		var filterArray = filterString.split(","); // filter on commas first to give us keyword phrases
-		if (!filterArray.prototype.trim) { // trim() workaround for older browsers, courtesy of developer.mozilla.org
-			filterArray.prototype.trim = function () {
-				return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-			};
-		};
 		filterArray.forEach(function(phrase) { // tidy up our keyword phrases to filter on
 			phrase = phrase.trim();
 		});
-		self.filter('keywords', filterArray);
+		return filterArray;
 	};
-	this.filter = function(property, locArray, filters) {
+	// Our filter function used by both filter processes
+	this.filter = function(property, locArray, filterArray) {
 		var results = [];
+
 		locArray.forEach(function(location) {
-				filters.forEach(function(filter) {
-					console.log(location.property); // just checks we're getting property's value not its key
-					if typeof location.property === 'string' {
-						if location.property.includes(filter) {
-							results.push(location);
-							break;
-						};
-					} else {
-						if $.inArray(filter, location.property) {
-							results.push(location);
-							break;
-						};
+			console.log("location.type: " + location.type()); // LEAVE THIS IN
+			console.log("location.keywords: " + location.keywords()); // LEAVE THIS IN
+			filterArray.forEach(function(filter) {
+				if (property === 'type') {
+					if (location.type().includes(filter)) {
+						results.push(location);
+						return; // NOT SURE ABOUT THESE - BREAK RETURNS "ILLEGAL BREAK STATEMENT"
 					};
-				});
+				} else {
+					if ($.inArray(filter, location.keywords())) {
+						results.push(location);
+						return; // SEE ABOVE
+					};
+				};
+			});
+		});
+		console.log(results);
 		return results;
 	};
+	// Call and combine our two filters, to be bound to html
+	this.filteredLocations = ko.computed(function(){
+		if (self.textFilterInput() !== "") {
+			var filterArray = self.formatTextInput(self.textFilterInput());
+			return self.filter('keywords', self.initLocations(), filterArray);
+		} else {
+			return self.initLocations();
+		};
+	}, this);
 };
 
 ko.applyBindings( new ViewModel() );

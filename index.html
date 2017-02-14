@@ -20,7 +20,7 @@
 			<!-- <input type="submit" data-bind="submit: textFilter"> TRY SETTING KEYPRESS FILTER ON TEXT-BOX FIRST, IF IT DOESN'T WORK USE THIS-->
 		</div>
 		<div id="list-container">
-			<ul id="locations-list" data-bind="foreach: locations">
+			<ul id="locations-list" data-bind="foreach: filteredLocations">
 				<li><strong data-bind="text: name, click: $parent.fetchLoc"></strong>
 				<p data-bind="text: address"></p> <p data-bind="text: description">
 				</p></li>
