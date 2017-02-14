@@ -38,7 +38,7 @@ var gMapsInit = function() {
 
 function newInfoWindow(place) {
 	var infowindow = new google.maps.InfoWindow({
-		content: "<h4>" + place.name + "</h4>" // can we mod this line to outsource to another func and load more info?
+		content: "<h4>" + place.name + "</h4>" // can we mod this line to outsource to another func and load more info? REVIEW FOR THIRD-PARTY API
 	});
 	return infowindow;
 }
