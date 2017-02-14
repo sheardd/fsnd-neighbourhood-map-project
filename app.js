@@ -152,7 +152,7 @@ var ViewModel = function() {
 						return; // NOT SURE ABOUT THESE - BREAK RETURNS "ILLEGAL BREAK STATEMENT"
 					};
 				} else {
-					if ($.inArray(filter, location.keywords())) {
+					if ($.inArray(filter, location.keywords())) { // ALL TEXT INPUT PASSES THIS CHECK
 						results.push(location);
 						return; // SEE ABOVE
 					};
