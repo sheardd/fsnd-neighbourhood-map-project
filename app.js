@@ -53,7 +53,7 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: 'Restaurant',
-		keywords: ['Asian']
+		keywords: ['ASIAN']
 	},
 	{
 		name: "Habanero's Burrito Bar",
@@ -63,7 +63,7 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: 'Restaurant',
-		keywords: ['Mexican', 'Fast Food', 'Street Food']
+		keywords: ['MEXICAN', 'FAST FOOD', 'STREET FOOD']
 	},
 	{
 		name: "Sonder Cafe Bar",
@@ -73,7 +73,7 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: 'Restaurant',
-		keywords: ['Bar & Grill']
+		keywords: ['BAR & GRILL']
 	},
 	{
 		name: "Pierro's Pizzeria",
@@ -83,7 +83,7 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: 'Restaurant',
-		keywords: ['Italian']
+		keywords: ['ITALIAN']
 	},
 	{
 		name: "Mustard and Rye",
@@ -93,7 +93,7 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: 'Restaurant',
-		keywords: ['Bar & Grill', 'BBQ', 'Burger']
+		keywords: ['BAR & GRILL', 'BBQ', 'BURGER']
 	},
 	{
 		name: "Hubbox",
@@ -103,7 +103,7 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: 'Restaurant',
-		keywords: ['Burger', 'Bar & Grill']
+		keywords: ['BURGER', 'BAR & GRILL']
 	}
 ];
 
@@ -132,34 +132,34 @@ var ViewModel = function() {
 	// filter by text input
 	this.textFilterInput = ko.observable("");
 	this.formatTextInput = function(filterString) {
+		var output = [];
 		var filterArray = filterString.split(","); // filter on commas first to give us keyword phrases
 		filterArray.forEach(function(phrase) { // tidy up our keyword phrases to filter on
-			phrase = phrase.trim();
+			phrase = phrase.trim()
+			phrase = phrase.toUpperCase();
+			output.push(phrase);
 		});
-		return filterArray;
+		return output;
 	};
 	// Our filter function used by both filter processes
 	this.filter = function(property, locArray, filterArray) {
 		var results = [];
 
 		locArray.forEach(function(location) {
-			console.log("location.type: " + location.type()); // LEAVE THIS IN
-			console.log("location.keywords: " + location.keywords()); // LEAVE THIS IN
 			filterArray.forEach(function(filter) {
 				if (property === 'type') {
 					if (location.type().includes(filter)) {
 						results.push(location);
-						return; // NOT SURE ABOUT THESE - BREAK RETURNS "ILLEGAL BREAK STATEMENT"
+						return;
 					};
 				} else {
-					if ($.inArray(filter, location.keywords())) { // ALL TEXT INPUT PASSES THIS CHECK
+					if ($.inArray(filter, location.keywords()) > -1 ) {
 						results.push(location);
-						return; // SEE ABOVE
+						return;
 					};
 				};
 			});
 		});
-		console.log(results);
 		return results;
 	};
 	// Call and combine our two filters, to be bound to html
