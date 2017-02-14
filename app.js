@@ -51,7 +51,13 @@ var locModel = [
 		coords: [50.263786, -5.048547],
 		description: "",
 		imgSrc: "",
-		imgAlt: ""
+		imgAlt: "",
+		categories: [
+			{
+				type: 'Restaurant',
+				keywords: ['Asian']
+			}
+		]
 	},
 	{
 		name: "Habanero's Burrito Bar",
@@ -59,7 +65,13 @@ var locModel = [
 		coords: [50.262962, -5.055009],
 		description: "",
 		imgSrc: "",
-		imgAlt: ""
+		imgAlt: "",
+		categories: [
+			{
+				type: 'Restaurant',
+				keywords: ['Mexican', 'Fast Food', 'Street Food']
+			}
+		]
 	},
 	{
 		name: "Sonder Cafe Bar",
@@ -67,7 +79,13 @@ var locModel = [
 		coords: [50.263139, -5.049306],
 		description: "",
 		imgSrc: "",
-		imgAlt: ""
+		imgAlt: "",
+		categories: [
+			{
+				type: 'Restaurant',
+				keywords: ['Bar & Grill']
+			}
+		]
 	},
 	{
 		name: "Pierro's Pizzeria",
@@ -75,7 +93,13 @@ var locModel = [
 		coords: [50.263132, -5.054528],
 		description: "",
 		imgSrc: "",
-		imgAlt: ""
+		imgAlt: "",
+		categories: [
+			{
+				type: 'Restaurant',
+				keywords: ['Italian']
+			}
+		]
 	},
 	{
 		name: "Mustard and Rye",
@@ -83,7 +107,13 @@ var locModel = [
 		coords: [50.262301, -5.054735],
 		description: "",
 		imgSrc: "",
-		imgAlt: ""
+		imgAlt: "",
+		categories: [
+			{
+				type: 'Restaurant',
+				keywords: ['Bar & Grill', 'BBQ', 'Burger']
+			}
+		]
 	},
 	{
 		name: "Hubbox",
@@ -91,7 +121,13 @@ var locModel = [
 		coords: [50.263206, -5.054040],
 		description: "",
 		imgSrc: "",
-		imgAlt: ""
+		imgAlt: "",
+		categories: [
+			{
+				type: 'Restaurant',
+				keywords: ['Burger', 'Bar & Grill']
+			}
+		]
 	}
 ];
 
