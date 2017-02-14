@@ -8,24 +8,25 @@ var gMapsInit = function() {
 		mapTypeId: 'terrain'
 	});
 
-	var infowindowArray = []; //this line - MAYBE TRY DECLARING LOOP VARIALS HERE FIRST?
+	var infowindowArray = [];
 	for (var i = 0; i < locModel.length; i++) {
 		var coords = locModel[i].coords;
 		var latLng = new google.maps.LatLng(coords[0],coords[1]);
 		map.center = latLng;
-		var infowindow = newInfoWindow(locModel[i]); // this line
-		infowindowArray.push(infowindow); // this line
-		console.log(infowindowArray[i]); // this line
+		var infowindow = newInfoWindow(locModel[i]);
 		var marker = new google.maps.Marker({
 			position: latLng,
 			map: map,
 			title: locModel[i].name,
 		});
-		marker.addListener('click', (function(savedMarker) {
+		marker.addListener('click', (function(savedMarker, savedInfoWindow) {
 			return function() {
-				infowindowArray[i].open(map, savedMarker); // this line
+				savedInfoWindow.open(map, savedMarker);
+				// $('#map').click(function() {
+				// 	savedInfoWindow.close();
+				// });
 		};
-		})(marker));
+		})(marker, infowindow));
 
 	};
 
