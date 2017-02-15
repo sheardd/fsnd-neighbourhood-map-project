@@ -17,8 +17,18 @@
 			<p data-bind="text: description"></p>
 		</div>
 		<div id="filter-controls">
-			<p>Filter Results: <input data-bind="textInput: textFilterInput"></p>
-			<!-- <input type="submit" data-bind="submit: textFilter"> TRY SETTING KEYPRESS FILTER ON TEXT-BOX FIRST, IF IT DOESN'T WORK USE THIS-->
+			<p>Filter Results By Keyword (Separate search terms with commas): 
+			<input data-bind="textInput: textFilterInput"></p>
+			<div>Filter Results By Category:
+				<div>Restaurants: 
+					<input data-bind="checked: checkboxFilterInput"
+					type="checkbox" value="Restaurant">
+				</div>
+				<div>Tourist Attractions: 
+					<input data-bind="checked: checkboxFilterInput"
+					type="checkbox" value="Tourist Attraction">
+				</div>
+			</div>
 		</div>
 		<div id="list-container">
 			<ul id="locations-list" data-bind="foreach: filteredLocations">

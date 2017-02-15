@@ -57,7 +57,7 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		type: 'Restaurant',
+		type: "Restaurant",
 		keywords: ['ASIAN']
 	},
 	{
@@ -67,7 +67,7 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		type: 'Restaurant',
+		type: "Restaurant",
 		keywords: ['MEXICAN', 'FAST FOOD', 'STREET FOOD']
 	},
 	{
@@ -77,7 +77,7 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		type: 'Restaurant',
+		type: "Restaurant",
 		keywords: ['BAR & GRILL']
 	},
 	{
@@ -87,7 +87,7 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		type: 'Restaurant',
+		type: "Restaurant",
 		keywords: ['ITALIAN']
 	},
 	{
@@ -97,7 +97,7 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		type: 'Restaurant',
+		type: "Restaurant",
 		keywords: ['BAR & GRILL', 'BBQ', 'BURGER']
 	},
 	{
@@ -107,7 +107,7 @@ var locModel = [
 		description: "",
 		imgSrc: "",
 		imgAlt: "",
-		type: 'Restaurant',
+		type: "Restaurant",
 		keywords: ['BURGER', 'BAR & GRILL']
 	}
 ];
@@ -146,6 +146,8 @@ var ViewModel = function() {
 		});
 		return output;
 	};
+	// filter by checkbox input
+	this.checkboxFilterInput = ko.observableArray([]);
 	// Our filter function used by both filter processes
 	this.filter = function(property, locArray, filterArray) {
 		var results = [];
@@ -153,7 +155,7 @@ var ViewModel = function() {
 		locArray.forEach(function(location) {
 			filterArray.forEach(function(filter) {
 				if (property === 'type') {
-					if (location.type().includes(filter)) {
+					if (filter === location.type()) {
 						results.push(location);
 						return;
 					};
@@ -167,11 +169,23 @@ var ViewModel = function() {
 		});
 		return results;
 	};
-	// Call and combine our two filters, to be bound to html
+	// Start with full results (either way), and if filters are given, refine
+	// results first on broad type, then specific keywords
 	this.filteredLocations = ko.computed(function(){
-		if (self.textFilterInput() !== "") {
-			var filterArray = self.formatTextInput(self.textFilterInput());
-			return self.filter('keywords', self.initLocations(), filterArray);
+		if (self.textFilterInput() !== "" || self.checkboxFilterInput().length > 0) {
+			// rules out both filters empty, start with full list of locations
+			var results = self.initLocations();
+			if (self.checkboxFilterInput().length > 0) {
+				// if there are checkbox filters, refine our results variable using them
+				results = self.filter('type', results, self.checkboxFilterInput());
+			};
+			if (self.textFilterInput() !== "") {
+				// if there are keyword filters, refine our results variable using them
+				var textFilterArray = self.formatTextInput(self.textFilterInput());
+				results = self.filter('keywords', results, textFilterArray);
+			};
+			// return our results 
+			return results;
 		} else {
 			return self.initLocations();
 		};
