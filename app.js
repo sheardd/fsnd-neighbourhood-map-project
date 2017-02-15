@@ -19,18 +19,20 @@ var gMapsInit = function() {
 			title: locModel[i].name,
 			infowindow: newInfoWindow(locModel[i]),
 		});
+		google.maps.InfoWindow.prototype.opened = false;
 		marker.set("type", "point");
 		marker.set("id", "marker-" + i);
-		marker.set("id", "marker-index");
 		marker.addListener('click', (function(savedMarker) {
-			return function() {
-				console.log("OPEN: BOOM!");
-				savedMarker.infowindow.open(map, savedMarker);
+			if (!savedMarker.infowindow.opened) {
+				return function() {
+					savedMarker.infowindow.opened = true;
+					savedMarker.infowindow.open(map, savedMarker);
+				};
 			};
 		})(marker));
 		$('body').not('#' + marker.id).click((function(savedMarker) {
 			return function (){
-				console.log("CLOSE: BOOM!");
+				savedMarker.infowindow.opened = false;
 				savedMarker.infowindow.close();
 			};
 		})(marker));
