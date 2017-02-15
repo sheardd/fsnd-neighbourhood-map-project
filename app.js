@@ -164,7 +164,6 @@ var ViewModel = function() {
 			filterArray.forEach(function(filter) {
 				if (property === 'type') {
 					if (filter === location.type()) {
-						marker.setVisible(true);
 						results.push(location);
 						return;
 					} else {
@@ -173,7 +172,6 @@ var ViewModel = function() {
 					};
 				} else {
 					if ($.inArray(filter, location.keywords()) > -1 ) {
-						marker.setVisible(true);
 						results.push(location);
 						return;
 					} else {
@@ -188,23 +186,21 @@ var ViewModel = function() {
 	// Start with full results (either way), and if filters are given, refine
 	// results first on broad type, then specific keywords
 	this.filteredLocations = ko.computed(function(){
-		if (self.textFilterInput() !== "" || self.checkboxFilterInput().length > 0) {
-			// rules out both filters empty, start with full list of locations
-			var results = self.initLocations();
-			if (self.checkboxFilterInput().length > 0) {
-				// if there are checkbox filters, refine our results variable using them
-				results = self.filter('type', results, self.checkboxFilterInput());
-			};
-			if (self.textFilterInput() !== "") {
-				// if there are keyword filters, refine our results variable using them
-				var textFilterArray = self.formatTextInput(self.textFilterInput());
-				results = self.filter('keywords', results, textFilterArray);
-			};
-			// return our results 
-			return results;
-		} else {
-			return self.initLocations();
+		var results = self.initLocations();
+		gMapsMarkers.forEach(function(marker) {
+			marker.setVisible(true);
+		});
+		if (self.checkboxFilterInput().length > 0) {
+			// if there are checkbox filters, refine our results variable using them
+			results = self.filter('type', results, self.checkboxFilterInput());
 		};
+		if (self.textFilterInput() !== "") {
+			// if there are keyword filters, refine our results variable using them
+			var textFilterArray = self.formatTextInput(self.textFilterInput());
+			results = self.filter('keywords', results, textFilterArray);
+		};
+		// return our results 
+		return results;
 	}, this);
 };
 
