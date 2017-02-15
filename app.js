@@ -21,13 +21,16 @@ var gMapsInit = function() {
 		});
 		marker.set("type", "point");
 		marker.set("id", "marker-" + i);
+		marker.set("id", "marker-index");
 		marker.addListener('click', (function(savedMarker) {
 			return function() {
+				console.log("OPEN: BOOM!");
 				savedMarker.infowindow.open(map, savedMarker);
 			};
 		})(marker));
 		$('body').not('#' + marker.id).click((function(savedMarker) {
 			return function (){
+				console.log("CLOSE: BOOM!");
 				savedMarker.infowindow.close();
 			};
 		})(marker));
