@@ -1,5 +1,5 @@
 var map;
-
+var gMapsMarkers = [];
 var gMapsInit = function() {
 	var truro = new google.maps.LatLng(50.263197, -5.051041);
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -8,7 +8,6 @@ var gMapsInit = function() {
 		mapTypeId: 'terrain'
 	});
 
-	var infowindowArray = [];
 	for (var i = 0; i < locModel.length; i++) {
 		var coords = locModel[i].coords;
 		var latLng = new google.maps.LatLng(coords[0],coords[1]);
@@ -21,7 +20,7 @@ var gMapsInit = function() {
 		});
 		google.maps.InfoWindow.prototype.opened = false;
 		marker.set("type", "point");
-		marker.set("id", "marker-" + i);
+		marker.set("id", "marker-" + locModel[i].id);
 		marker.addListener('click', (function(savedMarker) {
 			if (!savedMarker.infowindow.opened) {
 				return function() {
@@ -36,6 +35,7 @@ var gMapsInit = function() {
 				savedMarker.infowindow.close();
 			};
 		})(marker));
+		gMapsMarkers.push(marker);
 	};
 
 	map.center = truro;
@@ -58,7 +58,8 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: "Restaurant",
-		keywords: ['ASIAN']
+		keywords: ['ASIAN'],
+		id: 1
 	},
 	{
 		name: "Habanero's Burrito Bar",
@@ -68,7 +69,8 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: "Restaurant",
-		keywords: ['MEXICAN', 'FAST FOOD', 'STREET FOOD']
+		keywords: ['MEXICAN', 'FAST FOOD', 'STREET FOOD'],
+		id: 2
 	},
 	{
 		name: "Sonder Cafe Bar",
@@ -78,7 +80,8 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: "Restaurant",
-		keywords: ['BAR & GRILL']
+		keywords: ['BAR & GRILL'],
+		id: 3
 	},
 	{
 		name: "Pierro's Pizzeria",
@@ -88,7 +91,8 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: "Restaurant",
-		keywords: ['ITALIAN']
+		keywords: ['ITALIAN'],
+		id: 4
 	},
 	{
 		name: "Mustard and Rye",
@@ -98,7 +102,8 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: "Restaurant",
-		keywords: ['BAR & GRILL', 'BBQ', 'BURGER']
+		keywords: ['BAR & GRILL', 'BBQ', 'BURGER'],
+		id: 5
 	},
 	{
 		name: "Hubbox",
@@ -108,7 +113,8 @@ var locModel = [
 		imgSrc: "",
 		imgAlt: "",
 		type: "Restaurant",
-		keywords: ['BURGER', 'BAR & GRILL']
+		keywords: ['BURGER', 'BAR & GRILL'],
+		id: 6
 	}
 ];
 
@@ -120,6 +126,7 @@ var Location = function(data) {
 	this.imgAlt = ko.observable(data.imgAlt);
 	this.type = ko.observable(data.type);
 	this.keywords = ko.observableArray(data.keywords);
+	this.id = ko.observable(data.id);
 }
 
 var ViewModel = function() {
@@ -153,15 +160,24 @@ var ViewModel = function() {
 		var results = [];
 
 		locArray.forEach(function(location) {
+			var marker = gMapsMarkers[location.id() - 1];
 			filterArray.forEach(function(filter) {
 				if (property === 'type') {
 					if (filter === location.type()) {
+						marker.setVisible(true);
 						results.push(location);
+						return;
+					} else {
+						marker.setVisible(false);
 						return;
 					};
 				} else {
 					if ($.inArray(filter, location.keywords()) > -1 ) {
+						marker.setVisible(true);
 						results.push(location);
+						return;
+					} else {
+						marker.setVisible(false);
 						return;
 					};
 				};
