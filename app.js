@@ -9,12 +9,12 @@ var gMapsInit = function() {
 	});
 	google.maps.InfoWindow.prototype.opened = false;
 	for (var i = 0; i < locModel.locations.length; i++) {
-		createmarker(google, map, locModel.locations[i]);
+		createMarker(google, map, locModel.locations[i]);
 	};
 	map.center = truro;
 };
 
-function createmarker(google, map, location) {
+function createMarker(google, map, location) {
 	var coords = location.coords;
 	var latLng = new google.maps.LatLng(coords[0],coords[1]);
 	map.center = latLng;
@@ -58,8 +58,22 @@ function getTripadvisor(location) {
 };
 
 var locModel = {
+	"fetchCurrentLoc" : function() {
+		return locModel.currentLoc;
+	},
 	"markers": [],
-	"currentLoc" : {},
+	"currentLoc" : {
+		"name": "",
+		"address": "",
+		"coords": [],
+		"description": "",
+		"imgSrc": "",
+		"imgAlt": "",
+		"type": "",
+		"keywords": [],
+		"id": null,
+		"api": ""
+	},
 	"locations" : [
 		{
 			"name": "Chantek",
@@ -205,8 +219,18 @@ var ViewModel = function() {
 	});
 	// define currentLoc and the function to set it
 	this.currentLoc = ko.observable();
-	this.fetchCurrentLoc = function() {
+	this.setCurrentLoc = function() {
 		self.currentLoc(this);
+		locModel.currentLoc = this;
+		locModel.currentLoc.name = this.name();
+		locModel.currentLoc.address = this.address();
+		locModel.currentLoc.description = this.description();
+		locModel.currentLoc.imgSrc = this.imgSrc();
+		locModel.currentLoc.imgAlt = this.imgAlt();
+		locModel.currentLoc.type = this.type();
+		locModel.currentLoc.keywords = this.keywords();
+		locModel.currentLoc.id = this.id();
+		locModel.currentLoc.api = this.api();
 	};
 	// filter by text input
 	this.textFilterInput = ko.observable("");
