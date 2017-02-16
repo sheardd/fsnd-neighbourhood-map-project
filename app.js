@@ -189,12 +189,16 @@ var ViewModel = function() {
 	this.textFilterInput = ko.observable("");
 	this.formatTextInput = function(filterString) {
 		var output = [];
-		var filterArray = filterString.split(","); // filter on commas first to give us keyword phrases
+		var filterArray = filterString.split(",");
+		 // filter on commas first to give us keyword phrases
 		filterArray.forEach(function(phrase) { // tidy up our keyword phrases to filter on
 			phrase = phrase.trim()
+			phrase = phrase.replace(",", "");
 			phrase = phrase.toUpperCase();
 			output.push(phrase);
 		});
+		console.log("output: ");
+		console.log(output);
 		return output;
 	};
 	// filter by checkbox input
@@ -215,7 +219,7 @@ var ViewModel = function() {
 					};
 				} else {
 					location.keywords().forEach(function(keyword) {
-						if (keyword.includes(filter)) {
+						if (filter.length > 0 && keyword.includes(filter)) {
 							results.push(location);
 							return;
 					};})
