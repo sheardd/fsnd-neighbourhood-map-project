@@ -197,8 +197,6 @@ var ViewModel = function() {
 			phrase = phrase.toUpperCase();
 			output.push(phrase);
 		});
-		console.log("output: ");
-		console.log(output);
 		return output;
 	};
 	// filter by checkbox input
