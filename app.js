@@ -1,5 +1,5 @@
 var map;
-var gMapsMarkers = [];
+
 var gMapsInit = function() {
 	var truro = new google.maps.LatLng(50.263197, -5.051041);
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -41,7 +41,7 @@ function createmarker(google, map, location) {
 			savedMarker.infowindow.close();
 		};
 	})(marker));
-	gMapsMarkers.push(marker);
+	locModel.markers.push(marker);
 };
 
 function newInfoWindow(location) {
@@ -58,6 +58,7 @@ function getTripadvisor(location) {
 };
 
 var locModel = {
+	"markers": [],
 	"currentLoc" : {},
 	"locations" : [
 		{
@@ -226,11 +227,11 @@ var ViewModel = function() {
 	// Our filter function used by both filter processes
 	this.filter = function(property, locArray, filterArray) {
 		var results = [];
-		gMapsMarkers.forEach(function(marker) {
+		locModel.markers.forEach(function(marker) {
 			marker.setVisible(false);
 		});
 		locArray.forEach(function(location) {
-			var marker = gMapsMarkers[location.id() - 1];
+			var marker = locModel.markers[location.id() - 1];
 			filterArray.forEach(function(filter) {
 				if (property === 'type') {
 					if (filter === location.type()) {
@@ -249,8 +250,8 @@ var ViewModel = function() {
 
 		for (var i = 0; i < results.length; i++) {
 			var locationId = results[i].id();
-			for (var j = 0; j < gMapsMarkers.length; j++) {
-				var marker = gMapsMarkers[j];
+			for (var j = 0; j < locModel.markers.length; j++) {
+				var marker = locModel.markers[j];
 				var markerId = parseInt(marker.id.substr(7));
 				if (locationId === markerId) {
 					marker.setVisible(true);
@@ -264,7 +265,7 @@ var ViewModel = function() {
 	// results first on broad type, then specific keywords
 	this.filteredLocations = ko.computed(function(){
 		var results = self.initLocations();
-		gMapsMarkers.forEach(function(marker) {
+		locModel.markers.forEach(function(marker) {
 			marker.setVisible(true);
 		});
 		if (self.checkboxFilterInput().length > 0) {
