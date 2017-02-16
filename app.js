@@ -30,12 +30,14 @@ function createMarker(google, map, location) {
 		if (!savedMarker.infowindow.opened) {
 			return function() {
 				savedMarker.infowindow.opened = true;
-				// ViewModel.fetchLoc(location); THIS WON'T WORK WHILE VIEWMODEL IS A FUNCTION - EITHER CREATE A GLOBAL VARIABLE TO STORE LOCATIONS OR TURN VIEWMODEL INTO AN OBJECT
+				if (location.api.length === 0) {
+					tripadvisorVM.tripadvisor(location.id);
+				};
 				savedMarker.infowindow.open(map, savedMarker);
 			};
 		};
 	})(marker));
-	$('body').not('#' + marker.id).click((function(savedMarker) {
+	$('#map').not('#' + marker.id).click((function(savedMarker) {
 		return function (){
 			savedMarker.infowindow.opened = false;
 			savedMarker.infowindow.close();
@@ -51,29 +53,23 @@ function newInfoWindow(location) {
 	return infowindow;
 }
 
-function getTripadvisor(location) {
-	var api = "<p>Oh look they're on Tripadvisor</p>"
-	location.api = api;
-	return api;
-};
-
 var locModel = {
 	"fetchCurrentLoc" : function() {
 		return locModel.currentLoc;
 	},
 	"markers": [],
-	"currentLoc" : {
-		"name": "",
-		"address": "",
-		"coords": [],
-		"description": "",
-		"imgSrc": "",
-		"imgAlt": "",
-		"type": "",
-		"keywords": [],
-		"id": null,
-		"api": ""
-	},
+	// "currentLoc" : {
+	// 	"name": "",
+	// 	"address": "",
+	// 	"coords": [],
+	// 	"description": "",
+	// 	"imgSrc": "",
+	// 	"imgAlt": "",
+	// 	"type": "",
+	// 	"keywords": [],
+	// 	"id": null,
+	// 	"api": ""
+	// },
 	"locations" : [
 		{
 			"name": "Chantek",
@@ -217,21 +213,6 @@ var ViewModel = function() {
 	locModel.locations.forEach(function(locItem) {
 		self.initLocations.push( new Location(locItem) );
 	});
-	// define currentLoc and the function to set it
-	this.currentLoc = ko.observable();
-	this.setCurrentLoc = function() {
-		self.currentLoc(this);
-		locModel.currentLoc = this;
-		locModel.currentLoc.name = this.name();
-		locModel.currentLoc.address = this.address();
-		locModel.currentLoc.description = this.description();
-		locModel.currentLoc.imgSrc = this.imgSrc();
-		locModel.currentLoc.imgAlt = this.imgAlt();
-		locModel.currentLoc.type = this.type();
-		locModel.currentLoc.keywords = this.keywords();
-		locModel.currentLoc.id = this.id();
-		locModel.currentLoc.api = this.api();
-	};
 	// filter by text input
 	this.textFilterInput = ko.observable("");
 	this.formatTextInput = function(filterString) {
@@ -253,6 +234,7 @@ var ViewModel = function() {
 		var results = [];
 		locModel.markers.forEach(function(marker) {
 			marker.setVisible(false);
+			marker.infowindow.close();
 		});
 		locArray.forEach(function(location) {
 			var marker = locModel.markers[location.id() - 1];
@@ -313,10 +295,48 @@ var ViewModel = function() {
 				keywords: [''],
 				id: 99
 			});
+			// FIGURE OUT HOW TO SET THIS TO CURRENTLOC WITHOUT REMOVING OBSERVABLES - MIGHT WORK AS IS?
 		};
 		// return our results 
 		return results;
 	}, this);
+	// TRIPADVISOR BEGINS
+	// define currentLoc and the function to set it
+	this.currentLoc = ko.observable();
+	this.setCurrentLoc = function() {
+		// using currentLoc:
+		// make API request
+		// update currentLoc's api property (check that this updates the original observable as well)
+		if (this.api().length === 0) {
+			var tripadvisor = tripadvisorVM.tripadvisor(this.id());
+			this.api(tripadvisor);
+		};
+		var marker = locModel.markers[this.id()-1];
+		// marker.infowindow.content = self.currentLoc().api();
+		marker.infowindow.opened = true;
+		marker.infowindow.open(map, marker); // CLICKING ON THE OVERLAY FIRES THE CLOSE EVENT; MAYBE TRY LIMITING THE ORIGINAL LISTENER TO JUST THE MAP, AND EXPLICITLY CLOSING ALL MARKERS HERE BEFORE REOPENING
+		// locModel.currentLoc = this;
+		// locModel.currentLoc.name = this.name();
+		// locModel.currentLoc.address = this.address();
+		// locModel.currentLoc.description = this.description();
+		// locModel.currentLoc.imgSrc = this.imgSrc();
+		// locModel.currentLoc.imgAlt = this.imgAlt();
+		// locModel.currentLoc.type = this.type();
+		// locModel.currentLoc.keywords = this.keywords();
+		// locModel.currentLoc.id = this.id();
+		// locModel.currentLoc.api = this.api();
+		self.currentLoc(this);
+	};
+};
+
+var tripadvisorVM = {
+	tripadvisor: function (id) { // When you've actually got API data, you can get round HTML strings
+		var content = "<p>Oh look honey they're on Tripadvisor</p>" //by creating an object (like when we did
+		var marker = locModel.markers[id-1];
+		marker.infowindow.setContent(content);
+		locModel.locations[id-1].api = content;
+		return content;                         // new Location(locItem)), and bind that to a template in index.html
+	}
 };
 
 ko.applyBindings( new ViewModel() );
