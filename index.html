@@ -39,8 +39,10 @@
 				<li><strong data-bind="text: name, click: $parent.fetchLoc"></strong>
 				<p data-bind="text: address"></p> <p data-bind="text: description">
 				<p data-bind="text: type"></p>
-				<div data-bind="foreach: keywords">
-					<span data-bind="text: $data"></span>
+				<div>
+					- <span data-bind="foreach: keywords">
+						 <span data-bind="text: $data"></span> -
+					</span>
 				</div>
 				</p></li>
 			</ul>
