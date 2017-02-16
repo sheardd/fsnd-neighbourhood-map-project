@@ -7,47 +7,55 @@ var gMapsInit = function() {
 		center: truro,
 		mapTypeId: 'terrain'
 	});
-
+	google.maps.InfoWindow.prototype.opened = false;
 	for (var i = 0; i < locModel.length; i++) {
-		var coords = locModel[i].coords;
-		var latLng = new google.maps.LatLng(coords[0],coords[1]);
-		map.center = latLng;
-		var marker = new google.maps.Marker({
-			position: latLng,
-			map: map,
-			title: locModel[i].name,
-			infowindow: newInfoWindow(locModel[i]),
-		});
-		google.maps.InfoWindow.prototype.opened = false;
-		marker.set("type", "point");
-		marker.set("id", "marker-" + locModel[i].id);
-		marker.addListener('click', (function(savedMarker) {
-			if (!savedMarker.infowindow.opened) {
-				return function() {
-					savedMarker.infowindow.opened = true;
-					savedMarker.infowindow.open(map, savedMarker);
-				};
-			};
-		})(marker));
-		$('body').not('#' + marker.id).click((function(savedMarker) {
-			return function (){
-				savedMarker.infowindow.opened = false;
-				savedMarker.infowindow.close();
-			};
-		})(marker));
-		gMapsMarkers.push(marker);
+		createmarker(google, map, locModel[i]);
 	};
-
 	map.center = truro;
 };
 
-function newInfoWindow(place) {
+function createmarker(google, map, location) {
+	var coords = location.coords;
+	var latLng = new google.maps.LatLng(coords[0],coords[1]);
+	map.center = latLng;
+	var marker = new google.maps.Marker({
+		position: latLng,
+		map: map,
+		title: location.name,
+		infowindow: newInfoWindow(location),
+	});
+	marker.set("type", "point");
+	marker.set("id", "marker-" + location.id);
+	marker.addListener('click', (function(savedMarker) {
+		if (!savedMarker.infowindow.opened) {
+			return function() {
+				savedMarker.infowindow.opened = true;
+				// ViewModel.fetchLoc(location); THIS WON'T WORK WHILE VIEWMODEL IS A FUNCTION - EITHER CREATE A GLOBAL VARIABLE TO STORE LOCATIONS OR TURN VIEWMODEL INTO AN OBJECT
+				savedMarker.infowindow.open(map, savedMarker);
+			};
+		};
+	})(marker));
+	$('body').not('#' + marker.id).click((function(savedMarker) {
+		return function (){
+			savedMarker.infowindow.opened = false;
+			savedMarker.infowindow.close();
+		};
+	})(marker));
+	gMapsMarkers.push(marker);
+};
+
+function newInfoWindow(location) {
 	var infowindow = new google.maps.InfoWindow({
-		content: "<h4>" + place.name + "</h4>" // can we mod this line to outsource to another func and load more info? REVIEW FOR THIRD-PARTY API
+		content: "<h4>" + location.name + "</h4>" 
 	});
 	return infowindow;
 }
 
+function getTripadvisor(location) {
+	var api = "<p>Oh look they're on Tripadvisor</p>"
+	location.api = api;
+	return api;
+};
 
 var locModel = [
 	{
@@ -59,7 +67,8 @@ var locModel = [
 		imgAlt: "Smart modern restaurant with courtyard and open kitchen, serving Thai and South-East Asian dishes.",
 		type: "Restaurant",
 		keywords: ['ASIAN'],
-		id: 1
+		id: 1,
+		api: ''
 	},
 	{
 		name: "Habanero's Burrito Bar",
@@ -70,7 +79,8 @@ var locModel = [
 		imgAlt: "Mexican restaurant in Truro, Cornwall",
 		type: "Restaurant",
 		keywords: ['MEXICAN', 'FAST FOOD', 'STREET FOOD'],
-		id: 2
+		id: 2,
+		api: ''
 	},
 	{
 		name: "Sonder Cafe Bar",
@@ -81,7 +91,8 @@ var locModel = [
 		imgAlt: "Truro's first and only independent craft beer bar. Amazing spirits and cocktails, bottled beers and a small selection of quality wine.",
 		type: "Restaurant",
 		keywords: ['BAR & GRILL'],
-		id: 3
+		id: 3,
+		api: ''
 	},
 	{
 		name: "Pierro's Pizzeria",
@@ -92,7 +103,8 @@ var locModel = [
 		imgAlt: "Traditional Italian Food in the heart of Truro",
 		type: "Restaurant",
 		keywords: ['ITALIAN'],
-		id: 4
+		id: 4,
+		api: ''
 	},
 	{
 		name: "Mustard and Rye",
@@ -103,7 +115,8 @@ var locModel = [
 		imgAlt: "BBQ, steaks and shakes in sleek American-themed diner with yellow leather booths and vintage photos.",
 		type: "Restaurant",
 		keywords: ['BAR & GRILL', 'BBQ', 'BURGER'],
-		id: 5
+		id: 5,
+		api: ''
 	},
 	{
 		name: "Hubbox",
@@ -114,7 +127,8 @@ var locModel = [
 		imgAlt: "BURGERS - DOGS - BEERS",
 		type: "Restaurant",
 		keywords: ['BURGER', 'BAR & GRILL'],
-		id: 6
+		id: 6,
+		api: ''
 	},
 	{
 		name: "Truro Cathedral",
@@ -125,7 +139,8 @@ var locModel = [
 		imgAlt: "Victorian Gothic Revival CofE place of worship with a coffee shop and restaurant plus a gift shop.",
 		type: "Tourist Attraction",
 		keywords: ['HERITAGE'],
-		id: 7
+		id: 7,
+		api: ''
 	},
 	{
 		name: "Hall For Cornwall",
@@ -136,7 +151,8 @@ var locModel = [
 		imgAlt: "Live music, drama, dance and comedy, including international touring productions, plus annual panto.",
 		type: "Tourist Attraction",
 		keywords: ['ENTERTAINMENT'],
-		id: 8
+		id: 8,
+		api: ''
 	},
 	{
 		name: "Plaza Cinema",
@@ -147,7 +163,8 @@ var locModel = [
 		imgAlt: "Blockbusters and more in an art deco-fronted building, plus live screenings via satellite.",
 		type: "Tourist Attraction",
 		keywords: ['ENTERTAINMENT'],
-		id: 9
+		id: 9,
+		api: ''
 	},
 	{
 		name: "Royal Cornwall Museum",
@@ -158,7 +175,8 @@ var locModel = [
 		imgAlt: "Museum with minerals from around the globe and exhibits about the region's wildlife and history.",
 		type: "Tourist Attraction",
 		keywords: ['HERITAGE'],
-		id: 10
+		id: 10,
+		api: ''
 	}
 ];
 
@@ -171,6 +189,7 @@ var Location = function(data) {
 	this.type = ko.observable(data.type);
 	this.keywords = ko.observableArray(data.keywords);
 	this.id = ko.observable(data.id);
+	this.api = ko.observable(data.api);
 }
 
 var ViewModel = function() {
