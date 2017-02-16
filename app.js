@@ -202,7 +202,9 @@ var ViewModel = function() {
 	// Our filter function used by both filter processes
 	this.filter = function(property, locArray, filterArray) {
 		var results = [];
-
+		gMapsMarkers.forEach(function(marker) {
+			marker.setVisible(false);
+		});
 		locArray.forEach(function(location) {
 			var marker = gMapsMarkers[location.id() - 1];
 			filterArray.forEach(function(filter) {
@@ -210,23 +212,30 @@ var ViewModel = function() {
 					if (filter === location.type()) {
 						results.push(location);
 						return;
-					} else {
-						marker.setVisible(false);
-						return;
 					};
 				} else {
-					if ($.inArray(filter, location.keywords()) > -1 ) {
-						results.push(location);
-						return;
-					} else {
-						marker.setVisible(false);
-						return;
-					};
+					location.keywords().forEach(function(keyword) {
+						if (keyword.includes(filter)) {
+							results.push(location);
+							return;
+					};})
 				};
 			});
 		});
+
+		for (var i = 0; i < results.length; i++) {
+			var locationId = results[i].id();
+			for (var j = 0; j < gMapsMarkers.length; j++) {
+				var marker = gMapsMarkers[j];
+				var markerId = parseInt(marker.id.substr(7));
+				if (locationId === markerId) {
+					marker.setVisible(true);
+				};
+			};
+		};
 		return results;
 	};
+
 	// Start with full results (either way), and if filters are given, refine
 	// results first on broad type, then specific keywords
 	this.filteredLocations = ko.computed(function(){
@@ -242,6 +251,19 @@ var ViewModel = function() {
 			// if there are keyword filters, refine our results variable using them
 			var textFilterArray = self.formatTextInput(self.textFilterInput());
 			results = self.filter('keywords', results, textFilterArray);
+		};
+		if (results.length === 0) {
+			results.push({
+				name: "No Matches",
+				address: "",
+				coords: [],
+				description: "Looks like nothing matches that search",
+				imgSrc: "http://www.nurturingtruth.com/wp-content/uploads/2014/10/lost.jpg",
+				imgAlt: "Looks like nothing matches that search",
+				type: "",
+				keywords: [''],
+				id: 99
+			});
 		};
 		// return our results 
 		return results;
