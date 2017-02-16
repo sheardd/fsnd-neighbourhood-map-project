@@ -11,8 +11,12 @@
 	<div id="overlay">
 		<div id="current-location" data-bind="with: currentLoc">
 			<img id="current-location-img"
-			data-bind="attrib: {src, imgSrc}, attrib: {alt, imgAlt}">
+			data-bind="attr: {src: imgSrc, alt: imgAlt}">
 			<h2 data-bind="text: name"></h2>
+			<p data-bind="text: type"></p>
+			<div data-bind="foreach: keywords">
+				<span data-bind="text: $data"></span>
+			</div>
 			<p data-bind="text: address"></p>
 			<p data-bind="text: description"></p>
 		</div>
@@ -34,6 +38,10 @@
 			<ul id="locations-list" data-bind="foreach: filteredLocations">
 				<li><strong data-bind="text: name, click: $parent.fetchLoc"></strong>
 				<p data-bind="text: address"></p> <p data-bind="text: description">
+				<p data-bind="text: type"></p>
+				<div data-bind="foreach: keywords">
+					<span data-bind="text: $data"></span>
+				</div>
 				</p></li>
 			</ul>
 		</div>

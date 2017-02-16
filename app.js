@@ -76,9 +76,9 @@ var locModel = [
 		name: "Sonder Cafe Bar",
 		address: "6 Prince's St, Truro TR1 2ES",
 		coords: [50.263139, -5.049306],
-		description: "Truro’s first and only independent craft beer bar. Amazing spirits and cocktails, bottled beers and a small selection of quality wine.",
+		description: "Truro's first and only independent craft beer bar. Amazing spirits and cocktails, bottled beers and a small selection of quality wine.",
 		imgSrc: "http://www.enjoytruro.co.uk/assets/members/sonder_cafe_bar/thumbs/546x320/image-3716.jpeg",
-		imgAlt: "Truro’s first and only independent craft beer bar. Amazing spirits and cocktails, bottled beers and a small selection of quality wine.",
+		imgAlt: "Truro's first and only independent craft beer bar. Amazing spirits and cocktails, bottled beers and a small selection of quality wine.",
 		type: "Restaurant",
 		keywords: ['BAR & GRILL'],
 		id: 3
