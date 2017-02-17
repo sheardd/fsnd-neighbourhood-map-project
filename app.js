@@ -3,7 +3,7 @@ var map;
 var gMapsInit = function() {
 	var truro = new google.maps.LatLng(50.263197, -5.051041);
 	map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 17,
+		zoom: 16,
 		center: truro,
 		mapTypeId: 'terrain'
 	});
@@ -29,47 +29,49 @@ function createMarker(google, map, location) {
 	marker.addListener('click', (function(savedMarker) {
 		if (!savedMarker.infowindow.opened) {
 			return function() {
-				savedMarker.infowindow.opened = true;
-				// if (location.api.length === 0) {
-				// 	tripAdvisorVM.tripAdvisor(location.id);
-				// };
-				savedMarker.infowindow.open(map, savedMarker);
+				if (location.api) {
+					wikipediaVM.wikipedia(location.id);
+				} else {
+					openMarker(location.id);
+				};
 			};
 		};
 	})(marker));
-	$('#map').not('#' + marker.id).click((function(savedMarker) {
-		return function (){
-			savedMarker.infowindow.opened = false;
-			savedMarker.infowindow.close();
-		};
-	})(marker));
+	// $('#map').not('#' + marker.id).click((function(savedMarker) {
+	// 	return function (){
+	// 		savedMarker.infowindow.opened = false;
+	// 		savedMarker.infowindow.close();
+	// 	};
+	// })(marker));
 	locModel.markers.push(marker);
 };
 
 function newInfoWindow(location) {
 	var infowindow = new google.maps.InfoWindow({
-		content: "<h4>" + location.name + "</h4>" 
+		content: "<h4>" + location.name + "</h4>" +
+			"<p>" + location.description + "</p>"
 	});
 	return infowindow;
-}
+};
+
+function openMarker(id) {
+	var currentMarker = locModel.markers[id-1];
+		locModel.markers.forEach(function(marker) {
+			if (currentMarker === marker) {
+				marker.infowindow.opened = true;
+				marker.infowindow.open(map, marker);
+			} else {
+				marker.infowindow.opened = false;
+				marker.infowindow.close();
+			};
+		})
+};
 
 var locModel = {
 	"fetchCurrentLoc" : function() {
 		return locModel.currentLoc;
 	},
 	"markers": [],
-	// "currentLoc" : {
-	// 	"name": "",
-	// 	"address": "",
-	// 	"coords": [],
-	// 	"description": "",
-	// 	"imgSrc": "",
-	// 	"imgAlt": "",
-	// 	"type": "",
-	// 	"keywords": [],
-	// 	"id": null,
-	// 	"api": ""
-	// },
 	"locations" : [
 		{
 			"name": "Chantek",
@@ -81,7 +83,9 @@ var locModel = {
 			"type": "Restaurant",
 			"keywords": ["ASIAN"],
 			"id": 1,
-			"api": ""
+			"api": false,
+			"hasWiki": false,
+			"endpoint": "https://www.facebook.com/chantekrestaurant"
 		},
 		{
 			"name": "Habanero's Burrito Bar",
@@ -93,7 +97,9 @@ var locModel = {
 			"type": "Restaurant",
 			"keywords": ["MEXICAN", "FAST FOOD", "STREET FOOD"],
 			"id": 2,
-			"api": ""
+			"api": false,
+			"hasWiki": false,
+			"endpoint": "https://www.facebook.com/HabanerosTruro"
 		},
 		{
 			"name": "Sonder Cafe Bar",
@@ -105,7 +111,9 @@ var locModel = {
 			"type": "Restaurant",
 			"keywords": ["BAR & GRILL"],
 			"id": 3,
-			"api": ""
+			"api": false,
+			"hasWiki": false,
+			"endpoint": "https://www.facebook.com/SonderTruro"
 		},
 		{
 			"name": "Pierro's Pizzeria",
@@ -117,7 +125,9 @@ var locModel = {
 			"type": "Restaurant",
 			"keywords": ["ITALIAN"],
 			"id": 4,
-			"api": ""
+			"api": false,
+			"hasWiki": false,
+			"endpoint": "https://www.facebook.com/pierostruro"
 		},
 		{
 			"name": "Mustard and Rye",
@@ -129,7 +139,9 @@ var locModel = {
 			"type": "Restaurant",
 			"keywords": ["BAR & GRILL", "BBQ", "BURGER"],
 			"id": 5,
-			"api": ""
+			"api": false,
+			"hasWiki": false,
+			"endpoint": "https://www.facebook.com/MustardRye"
 		},
 		{
 			"name": "Hubbox",
@@ -141,55 +153,65 @@ var locModel = {
 			"type": "Restaurant",
 			"keywords": ["BURGER", "BAR & GRILL"],
 			"id": 6,
-			"api": ""
+			"api": false,
+			"hasWiki": false,
+			"endpoint": "https://www.facebook.com/hubboxtruro"
 		},
 		{
 			"name": "Truro Cathedral",
 			"address": "14 St Mary's St, Truro TR1 2AF",
 			"coords": [50.264117, -5.051248],
-			"description": "Victorian Gothic Revival CofE place of worship with a coffee shop and restaurant plus a gift shop.",
+			"description": "",
 			"imgSrc": "img/cathedral.jpg",
 			"imgAlt": "Victorian Gothic Revival CofE place of worship with a coffee shop and restaurant plus a gift shop.",
 			"type": "Tourist Attraction",
 			"keywords": ["HERITAGE"],
 			"id": 7,
-			"api": ""
+			"api": true,
+			"hasWiki": true,
+			"endpoint": "Truro_Cathedral"
 		},
 		{
 			"name": "Hall For Cornwall",
 			"address": "Back Quay, Truro TR1 2LL",
 			"coords": [50.262668, -5.050578],
-			"description": "Live music, drama, dance and comedy, including international touring productions, plus annual panto.",
+			"description": "",
 			"imgSrc": "img/hfc.jpg",
 			"imgAlt": "Live music, drama, dance and comedy, including international touring productions, plus annual panto.",
 			"type": "Tourist Attraction",
 			"keywords": ["ENTERTAINMENT"],
 			"id": 8,
-			"api": ""
+			"api": true,
+			"hasWiki": true,
+			"endpoint": "Hall_for_Cornwall"
 		},
 		{
-			"name": "Pannier Market",
-			"address": "Pannier Market, Lemon Quay, Truro, TR1 2LW",
-			"coords": [50.261537, -5.049622],
-			"description": "Old fashioned market in the heart of Truro.",
-			"imgSrc": "img/pannier.jpg",
-			"imgAlt": "Old fashioned market in the heart of Truro.",
+			"name": "Boscawen Park",
+			"address": "Malpas Rd, Truro TR1 1UE",
+			"coords": [50.252897, -5.040091],
+			"description": "",
+			"imgSrc": "img/boscawenpark.jpg",
+			"imgAlt": "Park & Cricket Ground just outside Truro's city center.",
 			"type": "Tourist Attraction",
 			"keywords": ["HERITAGE"],
 			"id": 9,
-			"api": ""
+			"api": true,
+			"hasWiki": true,
+			"endpoint": "Boscawen_Park"
 		},
 		{
 			"name": "Royal Cornwall Museum",
 			"address": "25 River St, Truro TR1 2SJ",
 			"coords": [50.263681, -5.054862],
-			"description": "Museum with minerals from around the globe and exhibits about the region's wildlife and history.",
+			"description": "",
 			"imgSrc": "img/rcm.jpg",
 			"imgAlt": "Museum with minerals from around the globe and exhibits about the region's wildlife and history.",
 			"type": "Tourist Attraction",
 			"keywords": ["HERITAGE"],
 			"id": 10,
-			"api": ""
+			"api": true,
+			"hasWiki": true,
+			"endpoint": "Royal_Cornwall_Museum"
 		}
 	],	
 };
@@ -204,7 +226,9 @@ var Location = function(data) {
 	this.keywords = ko.observableArray(data.keywords);
 	this.id = ko.observable(data.id);
 	this.api = ko.observable(data.api);
-}
+	this.hasWiki = ko.observable(data.hasWiki);
+	this.endpoint = ko.observable(data.endpoint);
+};
 
 var ViewModel = function() {
 	// initialisation
@@ -285,16 +309,18 @@ var ViewModel = function() {
 		};
 		if (results.length === 0) {
 			var noMatches = {
-				name: "No Matches",
-				address: "",
-				coords: [],
-				description: "Looks like nothing matches that search",
-				imgSrc: "img/lost.jpg",
-				imgAlt: "Looks like nothing matches that search",
-				type: "",
-				keywords: [''],
-				id: 99,
-				api: ""
+				"name": "No Matches",
+				"address": "",
+				"coords": [],
+				"description": "Looks like nothing matches that search",
+				"imgSrc": "img/lost.jpg",
+				"imgAlt": "Looks like nothing matches that search",
+				"type": "",
+				"keywords": [''],
+				"id": 99,
+				"api": "",
+				"hasWiki": false,
+				"endpoint": null
 			};
 			results.push(noMatches);
 			self.currentLoc(noMatches);
@@ -310,14 +336,16 @@ var ViewModel = function() {
 		// using currentLoc:
 		// make API request
 		// update currentLoc's api property (check that this updates the original observable as well)
-		// if (this.api().length === 0) {
-		// 	var tripAdvisor = tripAdvisorVM.tripAdvisor(this.id());
-		// 	this.api(tripAdvisor);
-		// };
-		var marker = locModel.markers[this.id()-1];
+		self.currentLoc(this);
+		if (this.api()) {
+			var wikipedia = wikipediaVM.wikipedia(this.id());
+			this.api(false);
+		} else { // REPEATED FROM MARKER CODE; OUTSOURCE
+			openMarker(this.id());
+		};
 		// marker.infowindow.content = self.currentLoc().api();
-		marker.infowindow.opened = true;
-		marker.infowindow.open(map, marker); // CLICKING ON THE OVERLAY FIRES THE CLOSE EVENT; MAYBE TRY LIMITING THE ORIGINAL LISTENER TO JUST THE MAP, AND EXPLICITLY CLOSING ALL MARKERS HERE BEFORE REOPENING
+		// marker.infowindow.opened = true;
+		// marker.infowindow.open(map, marker); // CLICKING ON THE OVERLAY FIRES THE CLOSE EVENT; MAYBE TRY LIMITING THE ORIGINAL LISTENER TO JUST THE MAP, AND EXPLICITLY CLOSING ALL MARKERS HERE BEFORE REOPENING
 		// locModel.currentLoc = this;
 		// locModel.currentLoc.name = this.name();
 		// locModel.currentLoc.address = this.address();
@@ -328,18 +356,43 @@ var ViewModel = function() {
 		// locModel.currentLoc.keywords = this.keywords();
 		// locModel.currentLoc.id = this.id();
 		// locModel.currentLoc.api = this.api();
-		self.currentLoc(this);
+		
 	};
 };
 
-// var tripAdvisorVM = {
-// 	tripAdvisor: function (id) { // When you've actually got API data, you can get round HTML strings
-// 		var content = "<p>Oh look honey they're on TripAdvisor</p>" //by creating an object (like when we did
-// 		var marker = locModel.markers[id-1];
-// 		marker.infowindow.setContent(content);
-// 		locModel.locations[id-1].api = content;
-// 		return content;                         // new Location(locItem)), and bind that to a template in index.html
-// 	}
-// };
+var wikipediaVM = {
+	wikipedia: function (id) { // When you've actually got API data, you can get round HTML strings
+		var location = locModel.locations[id-1];
+		var marker = locModel.markers[id-1];
+		var wikiRequestTimeout = setTimeout(function () {
+	    	console.log("<p>failed to get wikipedia resources</p>");
+	    }, 8000);
+
+	    var wikiurl = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
+	    	location.endpoint + "&format=json"; //&callback=wikiCallback
+	    var wikiAJAXSettings = {
+	    	url: wikiurl,
+	    	dataType: "jsonp",
+	    };
+	    $.ajax(wikiAJAXSettings).done(function(response) {
+	  //   	var articles = response[1];
+			// for (var i = 0; i < articles.length; i++) {
+			// 	var article = articles[i];
+			// 	var url = 'http://en.wikipedia.org/wiki/' + article;
+			// 	$wikiElem.append('<li><a href="' + url + '">' + article +
+	  //   			'</a></li>');
+			// };
+			content = "<h3>" + response[1][0] + "</h3>";
+			content += "<p>" + response[2][0] + "</p>";
+			content += "<a href='" + response[3][0] + "'>";
+			content += response[1][0] +  " on Wikipedia</a>";
+			marker.infowindow.setContent(content);
+			openMarker(id);
+			$('#current-location').find('.description').text(response[2][0]);
+			location.api = false;
+			clearTimeout(wikiRequestTimeout);
+	    });
+	}
+};
 
 ko.applyBindings( new ViewModel() );
