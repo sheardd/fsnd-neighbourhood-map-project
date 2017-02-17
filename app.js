@@ -30,9 +30,9 @@ function createMarker(google, map, location) {
 		if (!savedMarker.infowindow.opened) {
 			return function() {
 				savedMarker.infowindow.opened = true;
-				if (location.api.length === 0) {
-					tripadvisorVM.tripadvisor(location.id);
-				};
+				// if (location.api.length === 0) {
+				// 	tripAdvisorVM.tripAdvisor(location.id);
+				// };
 				savedMarker.infowindow.open(map, savedMarker);
 			};
 		};
@@ -168,14 +168,14 @@ var locModel = {
 			"api": ""
 		},
 		{
-			"name": "Plaza Cinema",
-			"address": "The Plaza, 69 Lemon St, Truro TR1 2PN",
-			"coords": [50.261991, -5.052413],
-			"description": "Blockbusters and more in an art deco-fronted building, plus live screenings via satellite.",
-			"imgSrc": "http://google.localdataimages.com/800_WM/2251/22510130.jpg",
-			"imgAlt": "Blockbusters and more in an art deco-fronted building, plus live screenings via satellite.",
+			"name": "Pannier Market",
+			"address": "Pannier Market, Lemon Quay, Truro, TR1 2LW",
+			"coords": [50.261537, -5.049622],
+			"description": "Old fashioned market in the heart of Truro.",
+			"imgSrc": "http://c8.alamy.com/comp/CPH2T4/the-pannier-market-in-truro-cornwall-uk-CPH2T4.jpg",
+			"imgAlt": "Old fashioned market in the heart of Truro.",
 			"type": "Tourist Attraction",
-			"keywords": ["ENTERTAINMENT"],
+			"keywords": ["HERITAGE"],
 			"id": 9,
 			"api": ""
 		},
@@ -300,17 +300,17 @@ var ViewModel = function() {
 		// return our results 
 		return results;
 	}, this);
-	// TRIPADVISOR BEGINS
+	// TripAdvisor BEGINS
 	// define currentLoc and the function to set it
 	this.currentLoc = ko.observable();
 	this.setCurrentLoc = function() {
 		// using currentLoc:
 		// make API request
 		// update currentLoc's api property (check that this updates the original observable as well)
-		if (this.api().length === 0) {
-			var tripadvisor = tripadvisorVM.tripadvisor(this.id());
-			this.api(tripadvisor);
-		};
+		// if (this.api().length === 0) {
+		// 	var tripAdvisor = tripAdvisorVM.tripAdvisor(this.id());
+		// 	this.api(tripAdvisor);
+		// };
 		var marker = locModel.markers[this.id()-1];
 		// marker.infowindow.content = self.currentLoc().api();
 		marker.infowindow.opened = true;
@@ -329,14 +329,14 @@ var ViewModel = function() {
 	};
 };
 
-var tripadvisorVM = {
-	tripadvisor: function (id) { // When you've actually got API data, you can get round HTML strings
-		var content = "<p>Oh look honey they're on Tripadvisor</p>" //by creating an object (like when we did
-		var marker = locModel.markers[id-1];
-		marker.infowindow.setContent(content);
-		locModel.locations[id-1].api = content;
-		return content;                         // new Location(locItem)), and bind that to a template in index.html
-	}
+// var tripAdvisorVM = {
+// 	tripAdvisor: function (id) { // When you've actually got API data, you can get round HTML strings
+// 		var content = "<p>Oh look honey they're on TripAdvisor</p>" //by creating an object (like when we did
+// 		var marker = locModel.markers[id-1];
+// 		marker.infowindow.setContent(content);
+// 		locModel.locations[id-1].api = content;
+// 		return content;                         // new Location(locItem)), and bind that to a template in index.html
+// 	}
 };
 
 ko.applyBindings( new ViewModel() );
