@@ -76,7 +76,7 @@ var locModel = {
 			"address": "15 New Bridge St, Truro TR1 2AA",
 			"coords": [50.263786, -5.048547],
 			"description": "Smart modern restaurant with courtyard and open kitchen, serving Thai and South-East Asian dishes.",
-			"imgSrc": "https://www.chantek.co.uk/images/pic01.jpg",
+			"imgSrc": "img/chantek.jpg",
 			"imgAlt": "Smart modern restaurant with courtyard and open kitchen, serving Thai and South-East Asian dishes.",
 			"type": "Restaurant",
 			"keywords": ["ASIAN"],
@@ -88,7 +88,7 @@ var locModel = {
 			"address": "11 Kenwyn St, Truro TR1 3DJ",
 			"coords": [50.262962, -5.055009],
 			"description": "Mexican restaurant in Truro, Cornwall",
-			"imgSrc": "https://www.enjoytruro.co.uk/assets/members/habaneros_burrito_bar_truro/thumbs/160x/image-3409.jpeg",
+			"imgSrc": "img/habaneros.jpeg",
 			"imgAlt": "Mexican restaurant in Truro, Cornwall",
 			"type": "Restaurant",
 			"keywords": ["MEXICAN", "FAST FOOD", "STREET FOOD"],
@@ -100,7 +100,7 @@ var locModel = {
 			"address": "6 Prince's St, Truro TR1 2ES",
 			"coords": [50.263139, -5.049306],
 			"description": "Truro's first and only independent craft beer bar. Amazing spirits and cocktails, bottled beers and a small selection of quality wine.",
-			"imgSrc": "https://www.enjoytruro.co.uk/assets/members/sonder_cafe_bar/thumbs/546x320/image-3716.jpeg",
+			"imgSrc": "img/sonder.jpeg",
 			"imgAlt": "Truro's first and only independent craft beer bar. Amazing spirits and cocktails, bottled beers and a small selection of quality wine.",
 			"type": "Restaurant",
 			"keywords": ["BAR & GRILL"],
@@ -112,7 +112,7 @@ var locModel = {
 			"address": "Kenwyn Street, Truro, Cornwall TR1 3DJ",
 			"coords": [50.263132, -5.054528],
 			"description": "Traditional Italian Food in the heart of Truro",
-			"imgSrc": "https://www.eatoutcornwall.com/upload/images/gallery/company/5328/P1040237.JPG",
+			"imgSrc": "img/pieros.JPG",
 			"imgAlt": "Traditional Italian Food in the heart of Truro",
 			"type": "Restaurant",
 			"keywords": ["ITALIAN"],
@@ -124,7 +124,7 @@ var locModel = {
 			"address": "Chiltern House, Calenick St, Truro TR1 2SF",
 			"coords": [50.262301, -5.054735],
 			"description": "BBQ, steaks and shakes in sleek American-themed diner with yellow leather booths and vintage photos.",
-			"imgSrc": "https://www.stundumplings.co.uk/wp-content/uploads/2013/12/mustard-and-rye-restaurant-in-truro.jpg",
+			"imgSrc": "img/mustardandrye.jpg",
 			"imgAlt": "BBQ, steaks and shakes in sleek American-themed diner with yellow leather booths and vintage photos.",
 			"type": "Restaurant",
 			"keywords": ["BAR & GRILL", "BBQ", "BURGER"],
@@ -136,7 +136,7 @@ var locModel = {
 			"address": "116 Kenwyn St, Truro TR1 3DJ",
 			"coords": [50.263206, -5.054040],
 			"description": "BURGERS - DOGS - BEERS",
-			"imgSrc": "https://www.hub-stives.co.uk/assets/Truro_slider1.jpg",
+			"imgSrc": "img/hubbox.jpg",
 			"imgAlt": "BURGERS - DOGS - BEERS",
 			"type": "Restaurant",
 			"keywords": ["BURGER", "BAR & GRILL"],
@@ -148,7 +148,7 @@ var locModel = {
 			"address": "14 St Mary's St, Truro TR1 2AF",
 			"coords": [50.264117, -5.051248],
 			"description": "Victorian Gothic Revival CofE place of worship with a coffee shop and restaurant plus a gift shop.",
-			"imgSrc": "https://farm9.staticflickr.com/8481/8284579509_14952d397a_z.jpg",
+			"imgSrc": "img/cathedral.jpg",
 			"imgAlt": "Victorian Gothic Revival CofE place of worship with a coffee shop and restaurant plus a gift shop.",
 			"type": "Tourist Attraction",
 			"keywords": ["HERITAGE"],
@@ -160,7 +160,7 @@ var locModel = {
 			"address": "Back Quay, Truro TR1 2LL",
 			"coords": [50.262668, -5.050578],
 			"description": "Live music, drama, dance and comedy, including international touring productions, plus annual panto.",
-			"imgSrc": "https://www.cornishguardian.co.uk/images/localworld/ugc-images/276349/Article/images/27937333/11101566-large.jpg",
+			"imgSrc": "img/hfc.jpg",
 			"imgAlt": "Live music, drama, dance and comedy, including international touring productions, plus annual panto.",
 			"type": "Tourist Attraction",
 			"keywords": ["ENTERTAINMENT"],
@@ -172,7 +172,7 @@ var locModel = {
 			"address": "Pannier Market, Lemon Quay, Truro, TR1 2LW",
 			"coords": [50.261537, -5.049622],
 			"description": "Old fashioned market in the heart of Truro.",
-			"imgSrc": "https://c8.alamy.com/comp/CPH2T4/the-pannier-market-in-truro-cornwall-uk-CPH2T4.jpg",
+			"imgSrc": "img/pannier.jpg",
 			"imgAlt": "Old fashioned market in the heart of Truro.",
 			"type": "Tourist Attraction",
 			"keywords": ["HERITAGE"],
@@ -184,7 +184,7 @@ var locModel = {
 			"address": "25 River St, Truro TR1 2SJ",
 			"coords": [50.263681, -5.054862],
 			"description": "Museum with minerals from around the globe and exhibits about the region's wildlife and history.",
-			"imgSrc": "https://static.artuk.org/_source/RCM_location_image_1.jpg",
+			"imgSrc": "img/rcm.jpg",
 			"imgAlt": "Museum with minerals from around the globe and exhibits about the region's wildlife and history.",
 			"type": "Tourist Attraction",
 			"keywords": ["HERITAGE"],
@@ -284,17 +284,20 @@ var ViewModel = function() {
 			results = self.filter('keywords', results, textFilterArray);
 		};
 		if (results.length === 0) {
-			results.push({
+			var noMatches = {
 				name: "No Matches",
 				address: "",
 				coords: [],
 				description: "Looks like nothing matches that search",
-				imgSrc: "https://www.nurturingtruth.com/wp-content/uploads/2014/10/lost.jpg",
+				imgSrc: "img/lost.jpg",
 				imgAlt: "Looks like nothing matches that search",
 				type: "",
 				keywords: [''],
-				id: 99
-			});
+				id: 99,
+				api: ""
+			};
+			results.push(noMatches);
+			self.currentLoc(noMatches);
 			// FIGURE OUT HOW TO SET THIS TO CURRENTLOC WITHOUT REMOVING OBSERVABLES - MIGHT WORK AS IS?
 		};
 		// return our results 
