@@ -337,6 +337,6 @@ var ViewModel = function() {
 // 		locModel.locations[id-1].api = content;
 // 		return content;                         // new Location(locItem)), and bind that to a template in index.html
 // 	}
-};
+// };
 
 ko.applyBindings( new ViewModel() );
