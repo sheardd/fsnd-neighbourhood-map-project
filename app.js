@@ -8,9 +8,12 @@ var gMapsInit = function() {
 		mapTypeId: 'terrain'
 	});
 	google.maps.InfoWindow.prototype.opened = false;
+	var markerArray = []
 	for (var i = 0; i < locModel.locations.length; i++) {
-		createMarker(google, map, locModel.locations[i]);
+		var marker = createMarker(google, map, locModel.locations[i]);
+		markerArray.push(marker);
 	};
+	locModel.markers(markerArray);
 	map.center = truro;
 };
 
@@ -24,26 +27,24 @@ function createMarker(google, map, location) {
 		title: location.name,
 		infowindow: newInfoWindow(location),
 	});
-	marker.set("type", "point");
-	marker.set("id", "marker-" + location.id);
-	marker.addListener('click', (function(savedMarker) {
-		if (!savedMarker.infowindow.opened) {
-			return function() {
-				if (location.api.length === 0) {
-					// APIVM.foursquare(location.id);
-				} else {
-					openMarker(location.id);
-				};
-			};
-		};
-	})(marker));
+	// marker.addListener('click', (function(savedMarker) {
+	// 	if (!savedMarker.infowindow.opened) {
+	// 		return function() {
+	// 			if (location.api.length === 0) {
+	// 				// APIVM.foursquare(location.id);
+	// 			} else {
+	// 				openMarker(location.id);
+	// 			};
+	// 		};
+	// 	};
+	// })(marker));
 	// $('#map').not('#' + marker.id).click((function(savedMarker) {
 	// 	return function (){
 	// 		savedMarker.infowindow.opened = false;
 	// 		savedMarker.infowindow.close();
 	// 	};
 	// })(marker));
-	locModel.markers.push(marker);
+	return marker;
 };
 
 function newInfoWindow(location) {
@@ -55,8 +56,8 @@ function newInfoWindow(location) {
 };
 
 function openMarker(id) {
-	var currentMarker = locModel.markers[id-1];
-		locModel.markers.forEach(function(marker) {
+	var currentMarker = locModel.markers()[id-1];
+		locModel.markers().forEach(function(marker) {
 			if (currentMarker === marker) {
 				marker.infowindow.opened = true;
 				marker.infowindow.open(map, marker);
@@ -68,10 +69,7 @@ function openMarker(id) {
 };
 
 var locModel = {
-	"fetchCurrentLoc" : function() {
-		return locModel.currentLoc;
-	},
-	"markers": [],
+	// "markers": [],
 	"locations" : [
 		{
 			"name": "Chantek",
@@ -239,6 +237,28 @@ var ViewModel = function() {
 		self.initLocations.push( new Location(locItem) );
 	});
 	// filter by text input
+	locModel.markers = ko.observableArray();
+
+	this.initMarkers = ko.computed(function() {
+		var updatedMarkers = [];
+		for (var i = 0; i < locModel.markers().length; i ++) {
+			var marker = locModel.markers()[i];
+			var location = self.initLocations()[i];
+			marker.addListener('click', (function(marker) {
+				if (!marker.infowindow.opened) {
+					return function() {
+						self.setCurrentLoc(location);
+					};
+				};
+			})(marker));
+			marker.set("type", "point");
+			var markerNum = parseInt([i]) + 1;
+			marker.set("id", "marker-" + markerNum)
+			updatedMarkers.push(marker)
+		};
+		locModel.markers(updatedMarkers);
+	}, this);
+
 	this.textFilterInput = ko.observable("");
 	this.formatTextInput = function(filterString) {
 		var output = [];
@@ -257,12 +277,12 @@ var ViewModel = function() {
 	// Our filter function used by both filter processes
 	this.filter = function(property, locArray, filterArray) {
 		var results = [];
-		locModel.markers.forEach(function(marker) {
+		locModel.markers().forEach(function(marker) {
 			marker.setVisible(false);
 			marker.infowindow.close();
 		});
 		locArray.forEach(function(location) {
-			var marker = locModel.markers[location.id() - 1];
+			var marker = locModel.markers()[location.id() - 1];
 			filterArray.forEach(function(filter) {
 				if (property === 'type') {
 					if (filter === location.type()) {
@@ -274,15 +294,16 @@ var ViewModel = function() {
 						if (filter.length > 0 && keyword.includes(filter)) {
 							results.push(location);
 							return;
-					};})
+						};
+					})
 				};
 			});
 		});
 
 		for (var i = 0; i < results.length; i++) {
 			var locationId = results[i].id();
-			for (var j = 0; j < locModel.markers.length; j++) {
-				var marker = locModel.markers[j];
+			for (var j = 0; j < locModel.markers().length; j++) {
+				var marker = locModel.markers()[j];
 				var markerId = parseInt(marker.id.substr(7));
 				if (locationId === markerId) {
 					marker.setVisible(true);
@@ -296,7 +317,7 @@ var ViewModel = function() {
 	// results first on broad type, then specific keywords
 	this.filteredLocations = ko.computed(function(){
 		var results = self.initLocations();
-		locModel.markers.forEach(function(marker) {
+		locModel.markers().forEach(function(marker) {
 			marker.setVisible(true);
 		});
 		if (self.checkboxFilterInput().length > 0) {
@@ -330,26 +351,15 @@ var ViewModel = function() {
 		// return our results 
 		return results;
 	}, this);
-	// TripAdvisor BEGINS
 	// define currentLoc and the function to set it
 	this.currentLoc = ko.observable();
-	this.setCurrentLoc = function() {
-		// using currentLoc:
-		// make API request
-		// update currentLoc's api property (check that this updates the original observable as well)
-		if (!this.api()) {
-			// if (this.hasWiki()) {
-			// 	var wikipedia = APIVM.wikipedia(this.id());
-			// 	this.api(wikipedia);
-			// 	console.log("this.api(): " + this.api());
-			// } else {
-			console.log("contacting foursquare...");
-			self.foursquare(this);
-			// };
-		} else { // REPEATED FROM MARKER CODE; OUTSOURCE
-			openMarker(this.id());
+	this.setCurrentLoc = function(location) {
+		if (!location.api() || !this.api()) {
+			self.foursquare(location || this);
+		} else {
+			openMarker(location.id() || this.id());
 		};
-		self.currentLoc(this);
+		self.currentLoc(location || this);
 	};
 	this.foursquare = function (location) { // WE WERE TESTING WHETHER JSON LOADS PROPERLY USING $.GETJSON
 		var client_secret = "MPHRMZ13RPQTOGEHPRNLIOKKF3MHOXQDJNCEQFOITUDNRUPH"
