@@ -29,8 +29,8 @@ function createMarker(google, map, location) {
 	marker.addListener('click', (function(savedMarker) {
 		if (!savedMarker.infowindow.opened) {
 			return function() {
-				if (location.api) {
-					wikipediaVM.wikipedia(location.id);
+				if (location.api.length === 0) {
+					// APIVM.foursquare(location.id);
 				} else {
 					openMarker(location.id);
 				};
@@ -75,143 +75,144 @@ var locModel = {
 	"locations" : [
 		{
 			"name": "Chantek",
-			"address": "15 New Bridge St, Truro TR1 2AA",
+			"address": "",
 			"coords": [50.263786, -5.048547],
-			"description": "Smart modern restaurant with courtyard and open kitchen, serving Thai and South-East Asian dishes.",
-			"imgSrc": "img/chantek.jpg",
-			"imgAlt": "Smart modern restaurant with courtyard and open kitchen, serving Thai and South-East Asian dishes.",
+			"description": "",
+			"imgSrc": "",
+			"imgAlt": "Smart modern restaurant with courtyard and open kitchen," + 
+				" serving Thai and South-East Asian dishes. - Google",
 			"type": "Restaurant",
 			"keywords": ["ASIAN"],
 			"id": 1,
 			"api": false,
-			"hasWiki": false,
-			"endpoint": "https://www.facebook.com/chantekrestaurant"
+			// "hasWiki": false,
+			"endpoint": "4c61b4ab86b6be9ae5568a34"
 		},
 		{
 			"name": "Habanero's Burrito Bar",
-			"address": "11 Kenwyn St, Truro TR1 3DJ",
+			"address": "",
 			"coords": [50.262962, -5.055009],
-			"description": "Mexican restaurant in Truro, Cornwall",
-			"imgSrc": "img/habaneros.jpeg",
-			"imgAlt": "Mexican restaurant in Truro, Cornwall",
+			"description": "",
+			"imgSrc": "",
+			"imgAlt": "Truro's only authentic Burrito spot.",
 			"type": "Restaurant",
 			"keywords": ["MEXICAN", "FAST FOOD", "STREET FOOD"],
 			"id": 2,
 			"api": false,
-			"hasWiki": false,
-			"endpoint": "https://www.facebook.com/HabanerosTruro"
+			// "hasWiki": false,
+			"endpoint": "55cb3030498ef054bdb34605"
 		},
 		{
 			"name": "Sonder Cafe Bar",
-			"address": "6 Prince's St, Truro TR1 2ES",
+			"address": "",
 			"coords": [50.263139, -5.049306],
-			"description": "Truro's first and only independent craft beer bar. Amazing spirits and cocktails, bottled beers and a small selection of quality wine.",
-			"imgSrc": "img/sonder.jpeg",
-			"imgAlt": "Truro's first and only independent craft beer bar. Amazing spirits and cocktails, bottled beers and a small selection of quality wine.",
+			"description": "",
+			"imgSrc": "",
+			"imgAlt": "Truro’s first and only independent craft beer bar.",
 			"type": "Restaurant",
 			"keywords": ["BAR & GRILL"],
 			"id": 3,
 			"api": false,
-			"hasWiki": false,
-			"endpoint": "https://www.facebook.com/SonderTruro"
+			// "hasWiki": false,
+			"endpoint": "56f98728498ed2f78a0e9315"
 		},
 		{
 			"name": "Pierro's Pizzeria",
-			"address": "Kenwyn Street, Truro, Cornwall TR1 3DJ",
+			"address": "",
 			"coords": [50.263132, -5.054528],
-			"description": "Traditional Italian Food in the heart of Truro",
-			"imgSrc": "img/pieros.JPG",
-			"imgAlt": "Traditional Italian Food in the heart of Truro",
+			"description": "",
+			"imgSrc": "",
+			"imgAlt": "Family-oriented traditional Italian cuisine.",
 			"type": "Restaurant",
 			"keywords": ["ITALIAN"],
 			"id": 4,
 			"api": false,
-			"hasWiki": false,
-			"endpoint": "https://www.facebook.com/pierostruro"
+			// "hasWiki": false,
+			"endpoint": "4babb3aff964a520e2c13ae3"
 		},
 		{
 			"name": "Mustard and Rye",
-			"address": "Chiltern House, Calenick St, Truro TR1 2SF",
+			"address": "",
 			"coords": [50.262301, -5.054735],
-			"description": "BBQ, steaks and shakes in sleek American-themed diner with yellow leather booths and vintage photos.",
-			"imgSrc": "img/mustardandrye.jpg",
-			"imgAlt": "BBQ, steaks and shakes in sleek American-themed diner with yellow leather booths and vintage photos.",
+			"description": "",
+			"imgSrc": "",
+			"imgAlt": "BBQ, steaks and shakes in sleek American-themed diner with yellow leather booths and vintage photos. - Google",
 			"type": "Restaurant",
 			"keywords": ["BAR & GRILL", "BBQ", "BURGER"],
 			"id": 5,
 			"api": false,
-			"hasWiki": false,
-			"endpoint": "https://www.facebook.com/MustardRye"
+			// "hasWiki": false,
+			"endpoint": "523d9ece498e057b77a72e45"
 		},
 		{
 			"name": "Hubbox",
-			"address": "116 Kenwyn St, Truro TR1 3DJ",
+			"address": "",
 			"coords": [50.263206, -5.054040],
-			"description": "BURGERS - DOGS - BEERS",
-			"imgSrc": "img/hubbox.jpg",
+			"description": "",
+			"imgSrc": "",
 			"imgAlt": "BURGERS - DOGS - BEERS",
 			"type": "Restaurant",
 			"keywords": ["BURGER", "BAR & GRILL"],
 			"id": 6,
 			"api": false,
-			"hasWiki": false,
-			"endpoint": "https://www.facebook.com/hubboxtruro"
+			// "hasWiki": false,
+			"endpoint": "53fb5b67498e83054e356060"
 		},
 		{
 			"name": "Truro Cathedral",
-			"address": "14 St Mary's St, Truro TR1 2AF",
+			"address": "",
 			"coords": [50.264117, -5.051248],
 			"description": "",
-			"imgSrc": "img/cathedral.jpg",
-			"imgAlt": "Victorian Gothic Revival CofE place of worship with a coffee shop and restaurant plus a gift shop.",
+			"imgSrc": "",
+			"imgAlt": "Victorian Gothic Revival CofE place of worship with a coffee shop and restaurant plus a gift shop. - Google",
 			"type": "Tourist Attraction",
 			"keywords": ["HERITAGE"],
 			"id": 7,
-			"api": true,
-			"hasWiki": true,
-			"endpoint": "Truro_Cathedral"
+			"api": false,
+			// "hasWiki": true,
+			"endpoint": "4bfce39e55539c74468bbcf3"
 		},
 		{
 			"name": "Hall For Cornwall",
-			"address": "Back Quay, Truro TR1 2LL",
+			"address": "",
 			"coords": [50.262668, -5.050578],
 			"description": "",
-			"imgSrc": "img/hfc.jpg",
-			"imgAlt": "Live music, drama, dance and comedy, including international touring productions, plus annual panto.",
+			"imgSrc": "",
+			"imgAlt": "Live music, drama, dance and comedy, including international touring productions, plus annual panto. - Google",
 			"type": "Tourist Attraction",
 			"keywords": ["ENTERTAINMENT"],
 			"id": 8,
-			"api": true,
-			"hasWiki": true,
-			"endpoint": "Hall_for_Cornwall"
+			"api": false,
+			// "hasWiki": true,
+			"endpoint": "4bab3ec2f964a520729b3ae3"
 		},
 		{
-			"name": "Boscawen Park",
-			"address": "Malpas Rd, Truro TR1 1UE",
+			"name": "Pannier Market",
+			"address": "",
 			"coords": [50.252897, -5.040091],
 			"description": "",
-			"imgSrc": "img/boscawenpark.jpg",
-			"imgAlt": "Park & Cricket Ground just outside Truro's city center.",
+			"imgSrc": "",
+			"imgAlt": "Truro's old fashioned Flea Market.",
 			"type": "Tourist Attraction",
 			"keywords": ["HERITAGE"],
 			"id": 9,
-			"api": true,
-			"hasWiki": true,
+			"api": false,
+			// "hasWiki": true,
 			"endpoint": "Boscawen_Park"
 		},
 		{
 			"name": "Royal Cornwall Museum",
-			"address": "25 River St, Truro TR1 2SJ",
+			"address": "",
 			"coords": [50.263681, -5.054862],
 			"description": "",
-			"imgSrc": "img/rcm.jpg",
-			"imgAlt": "Museum with minerals from around the globe and exhibits about the region's wildlife and history.",
+			"imgSrc": "",
+			"imgAlt": "Museum with minerals from around the globe and exhibits about the region's wildlife and history. - Google",
 			"type": "Tourist Attraction",
 			"keywords": ["HERITAGE"],
 			"id": 10,
-			"api": true,
-			"hasWiki": true,
-			"endpoint": "Royal_Cornwall_Museum"
+			"api": false,
+			// "hasWiki": true,
+			"endpoint": "4bc33143abf49521e95ec393"
 		}
 	],	
 };
@@ -226,7 +227,7 @@ var Location = function(data) {
 	this.keywords = ko.observableArray(data.keywords);
 	this.id = ko.observable(data.id);
 	this.api = ko.observable(data.api);
-	this.hasWiki = ko.observable(data.hasWiki);
+	// this.hasWiki = ko.observable(data.hasWiki);
 	this.endpoint = ko.observable(data.endpoint);
 };
 
@@ -319,8 +320,8 @@ var ViewModel = function() {
 				"keywords": [''],
 				"id": 99,
 				"api": "",
-				"hasWiki": false,
-				"endpoint": null
+				// "hasWiki": false,
+				// "endpoint": "Truro"
 			};
 			results.push(noMatches);
 			self.currentLoc(noMatches);
@@ -336,63 +337,79 @@ var ViewModel = function() {
 		// using currentLoc:
 		// make API request
 		// update currentLoc's api property (check that this updates the original observable as well)
-		self.currentLoc(this);
-		if (this.api()) {
-			var wikipedia = wikipediaVM.wikipedia(this.id());
-			this.api(false);
+		if (!this.api()) {
+			// if (this.hasWiki()) {
+			// 	var wikipedia = APIVM.wikipedia(this.id());
+			// 	this.api(wikipedia);
+			// 	console.log("this.api(): " + this.api());
+			// } else {
+			console.log("contacting foursquare...");
+			self.foursquare(this);
+			// };
 		} else { // REPEATED FROM MARKER CODE; OUTSOURCE
 			openMarker(this.id());
 		};
-		// marker.infowindow.content = self.currentLoc().api();
-		// marker.infowindow.opened = true;
-		// marker.infowindow.open(map, marker); // CLICKING ON THE OVERLAY FIRES THE CLOSE EVENT; MAYBE TRY LIMITING THE ORIGINAL LISTENER TO JUST THE MAP, AND EXPLICITLY CLOSING ALL MARKERS HERE BEFORE REOPENING
-		// locModel.currentLoc = this;
-		// locModel.currentLoc.name = this.name();
-		// locModel.currentLoc.address = this.address();
-		// locModel.currentLoc.description = this.description();
-		// locModel.currentLoc.imgSrc = this.imgSrc();
-		// locModel.currentLoc.imgAlt = this.imgAlt();
-		// locModel.currentLoc.type = this.type();
-		// locModel.currentLoc.keywords = this.keywords();
-		// locModel.currentLoc.id = this.id();
-		// locModel.currentLoc.api = this.api();
-		
+		self.currentLoc(this);
+	};
+	this.foursquare = function (location) { // WE WERE TESTING WHETHER JSON LOADS PROPERLY USING $.GETJSON
+		var client_secret = "MPHRMZ13RPQTOGEHPRNLIOKKF3MHOXQDJNCEQFOITUDNRUPH"
+		var client_id = "SPDMDU0UVW1E0UZ2MW3HDJCHG0YCR1VYZX2EFZDOC4GQNHZU"
+		var fsurl = "https://api.foursquare.com/v2/venues/" + location.endpoint();
+		fsurl += "?client_id=" + client_id + "&client_secret=" + client_secret;
+		fsurl += "&v=20170218&m=foursquare"
+		var fsAJAXSettings = {
+			url: fsurl,
+		};
+		$.ajax(fsAJAXSettings).done(function(response) {
+	    console.log(response.response);
+	    var venue = response.response.venue;
+	    location.address(venue.location.address);
+	    var firstTip = venue.tips.groups[0].items[0].text;
+	    location.description(firstTip);
+	    var imgSrc = venue.bestPhoto.prefix + venue.bestPhoto.width + "x" + 
+	    	venue.bestPhoto.height + venue.bestPhoto.suffix;
+	    location.imgSrc(imgSrc);
+	    //add marker code
+	    });
 	};
 };
 
-var wikipediaVM = {
-	wikipedia: function (id) { // When you've actually got API data, you can get round HTML strings
-		var location = locModel.locations[id-1];
-		var marker = locModel.markers[id-1];
-		var wikiRequestTimeout = setTimeout(function () {
-	    	console.log("<p>failed to get wikipedia resources</p>");
-	    }, 8000);
+// var APIVM = {
+// 	wikipedia: function (id) { // When you've actually got API data, you can get round HTML strings
+// 		var location = locModel.locations[id-1];
+// 		var marker = locModel.markers[id-1];
+// 		var wikiRequestTimeout = setTimeout(function () {
+// 	    	console.log("<p>failed to get wikipedia resources</p>");
+// 	    }, 8000);
 
-	    var wikiurl = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
-	    	location.endpoint + "&format=json"; //&callback=wikiCallback
-	    var wikiAJAXSettings = {
-	    	url: wikiurl,
-	    	dataType: "jsonp",
-	    };
-	    $.ajax(wikiAJAXSettings).done(function(response) {
-	  //   	var articles = response[1];
-			// for (var i = 0; i < articles.length; i++) {
-			// 	var article = articles[i];
-			// 	var url = 'http://en.wikipedia.org/wiki/' + article;
-			// 	$wikiElem.append('<li><a href="' + url + '">' + article +
-	  //   			'</a></li>');
-			// };
-			content = "<h3>" + response[1][0] + "</h3>";
-			content += "<p>" + response[2][0] + "</p>";
-			content += "<a href='" + response[3][0] + "'>";
-			content += response[1][0] +  " on Wikipedia</a>";
-			marker.infowindow.setContent(content);
-			openMarker(id);
-			$('#current-location').find('.description').text(response[2][0]);
-			location.api = false;
-			clearTimeout(wikiRequestTimeout);
-	    });
-	}
-};
+// 	    var wikiurl = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
+// 	    	location.endpoint + "&format=json"; //&callback=wikiCallback
+// 	    var wikiAJAXSettings = {
+// 	    	url: wikiurl,
+// 	    	dataType: "jsonp",
+// 	    };
+// 	    var content = $.ajax(wikiAJAXSettings).done(function(response) {
+// 	  //   	var articles = response[1];
+// 			// for (var i = 0; i < articles.length; i++) {
+// 			// 	var article = articles[i];
+// 			// 	var url = 'http://en.wikipedia.org/wiki/' + article;
+// 			// 	$wikiElem.append('<li><a href="' + url + '">' + article +
+// 	  //   			'</a></li>');
+// 			// };
+// 			var html = "<h3>" + response[1][0] + "</h3>";
+// 			html += "<p>" + response[2][0] + "</p>";
+// 			html += "<a href='" + response[3][0] + "'>";
+// 			html += response[1][0] +  " on Wikipedia</a>";
+// 			marker.infowindow.setContent(html);
+// 			openMarker(id);
+// 			$('#current-location').find('.description').text(response[2][0]);
+// 			location.api = html;
+// 			clearTimeout(wikiRequestTimeout);
+// 			return html;
+// 	    });
+// 	    return content;
+// 	},
+	
+// };
 
 ko.applyBindings( new ViewModel() );
