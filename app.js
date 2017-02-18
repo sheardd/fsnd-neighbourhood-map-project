@@ -244,13 +244,13 @@ var ViewModel = function() {
 		for (var i = 0; i < locModel.markers().length; i ++) {
 			var marker = locModel.markers()[i];
 			var location = self.initLocations()[i];
-			marker.addListener('click', (function(marker) {
+			marker.addListener('click', (function(marker, location) {
 				if (!marker.infowindow.opened) {
 					return function() {
 						self.setCurrentLoc(location);
 					};
 				};
-			})(marker));
+			})(marker, location));
 			marker.set("type", "point");
 			var markerNum = parseInt([i]) + 1;
 			marker.set("id", "marker-" + markerNum)
