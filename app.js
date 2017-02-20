@@ -3,7 +3,7 @@ var map;
 var gMapsInit = function() {
 	var truro = new google.maps.LatLng(50.263197, -5.051041);
 	map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 16,
+		zoom: 15,
 		center: truro,
 		mapTypeId: 'terrain'
 	});
@@ -176,17 +176,17 @@ var locModel = {
 			"endpoint": "4bab3ec2f964a520729b3ae3"
 		},
 		{
-			"name": "Pannier Market",
+			"name": "Lemon Quay",
 			"address": "",
-			"coords": [50.252897, -5.040091],
+			"coords": [50.262514, -5.051240],
 			"description": "",
 			"imgSrc": "",
-			"imgAlt": "Truro's old fashioned Flea Market.",
+			"imgAlt": "Truro's main plaza.",
 			"type": "Tourist Attraction",
-			"keywords": ["HERITAGE"],
+			"keywords": ["PLAZA"],
 			"id": 9,
 			"api": false,
-			"endpoint": "Boscawen_Park"
+			"endpoint": "4c95185594a0236a64fb9212"
 		},
 		{
 			"name": "Royal Cornwall Museum",
@@ -323,32 +323,37 @@ var ViewModel = function() {
 		if (results.length === 0) {
 			var noMatches = {
 				"name": "No Matches",
-				"address": "",
-				"coords": [],
-				"description": "Looks like nothing matches that search",
+				"address": "Looks like nothing matches that search",
 				"imgSrc": "img/lost.jpg",
 				"imgAlt": "Looks like nothing matches that search",
 				"type": "",
 				"keywords": [''],
-				"id": 99,
-				"api": "",
-				// "hasWiki": false,
-				// "endpoint": "Truro"
+				"id": 0,
 			};
 			results.push(noMatches);
 			self.currentLoc(noMatches);
 			// FIGURE OUT HOW TO SET THIS TO CURRENTLOC WITHOUT REMOVING OBSERVABLES - MIGHT WORK AS IS?
+			return results;
+		} else {
+			// remove duplicate results based on Christian Landgren's solution:
+			// http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array
+			var uniqueResults = results.reduce(function(filteredResults,result){
+				if (filteredResults.indexOf(result) < 0 ) filteredResults.push(result);
+				return filteredResults;
+			},[]);
+			// return our results 
+			return uniqueResults;
 		};
-		// return our results 
-		return results;
 	}, this);
 	// define currentLoc and the function to set it
 	this.currentLoc = ko.observable();
 	this.setCurrentLoc = function(location) {
-		if (!location.api() || !this.api()) {
-			self.foursquare(location || this);
-		} else {
-			openInfoWindow(location.id() || this.id());
+		if (location.id !== 0 ) {
+			if (!location.api() || !this.api()) {
+				self.foursquare(location || this);
+			} else {
+				openInfoWindow(location.id() || this.id());
+			};
 		};
 		self.currentLoc(location || this);
 	};
