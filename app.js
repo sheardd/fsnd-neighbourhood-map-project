@@ -33,7 +33,7 @@ function createMarker(google, map, location) {
 	// 			if (location.api.length === 0) {
 	// 				// APIVM.foursquare(location.id);
 	// 			} else {
-	// 				openMarker(location.id);
+	// 				openInfoWindow(location.id);
 	// 			};
 	// 		};
 	// 	};
@@ -49,13 +49,12 @@ function createMarker(google, map, location) {
 
 function newInfoWindow(location) {
 	var infowindow = new google.maps.InfoWindow({
-		content: "<h4>" + location.name + "</h4>" +
-			"<p>" + location.description + "</p>"
+		content: "<h4>" + location.name + "</h4>"
 	});
 	return infowindow;
 };
 
-function openMarker(id) {
+function openInfoWindow(id) {
 	var currentMarker = locModel.markers()[id-1];
 		locModel.markers().forEach(function(marker) {
 			if (currentMarker === marker) {
@@ -69,7 +68,7 @@ function openMarker(id) {
 };
 
 var locModel = {
-	// "markers": [],
+	"markers": [],
 	"locations" : [
 		{
 			"name": "Chantek",
@@ -83,7 +82,6 @@ var locModel = {
 			"keywords": ["ASIAN"],
 			"id": 1,
 			"api": false,
-			// "hasWiki": false,
 			"endpoint": "4c61b4ab86b6be9ae5568a34"
 		},
 		{
@@ -97,7 +95,6 @@ var locModel = {
 			"keywords": ["MEXICAN", "FAST FOOD", "STREET FOOD"],
 			"id": 2,
 			"api": false,
-			// "hasWiki": false,
 			"endpoint": "55cb3030498ef054bdb34605"
 		},
 		{
@@ -111,7 +108,6 @@ var locModel = {
 			"keywords": ["BAR & GRILL"],
 			"id": 3,
 			"api": false,
-			// "hasWiki": false,
 			"endpoint": "56f98728498ed2f78a0e9315"
 		},
 		{
@@ -125,7 +121,6 @@ var locModel = {
 			"keywords": ["ITALIAN"],
 			"id": 4,
 			"api": false,
-			// "hasWiki": false,
 			"endpoint": "4babb3aff964a520e2c13ae3"
 		},
 		{
@@ -139,7 +134,6 @@ var locModel = {
 			"keywords": ["BAR & GRILL", "BBQ", "BURGER"],
 			"id": 5,
 			"api": false,
-			// "hasWiki": false,
 			"endpoint": "523d9ece498e057b77a72e45"
 		},
 		{
@@ -153,7 +147,6 @@ var locModel = {
 			"keywords": ["BURGER", "BAR & GRILL"],
 			"id": 6,
 			"api": false,
-			// "hasWiki": false,
 			"endpoint": "53fb5b67498e83054e356060"
 		},
 		{
@@ -167,7 +160,6 @@ var locModel = {
 			"keywords": ["HERITAGE"],
 			"id": 7,
 			"api": false,
-			// "hasWiki": true,
 			"endpoint": "4bfce39e55539c74468bbcf3"
 		},
 		{
@@ -181,7 +173,6 @@ var locModel = {
 			"keywords": ["ENTERTAINMENT"],
 			"id": 8,
 			"api": false,
-			// "hasWiki": true,
 			"endpoint": "4bab3ec2f964a520729b3ae3"
 		},
 		{
@@ -195,7 +186,6 @@ var locModel = {
 			"keywords": ["HERITAGE"],
 			"id": 9,
 			"api": false,
-			// "hasWiki": true,
 			"endpoint": "Boscawen_Park"
 		},
 		{
@@ -209,7 +199,6 @@ var locModel = {
 			"keywords": ["HERITAGE"],
 			"id": 10,
 			"api": false,
-			// "hasWiki": true,
 			"endpoint": "4bc33143abf49521e95ec393"
 		}
 	],	
@@ -230,13 +219,14 @@ var Location = function(data) {
 };
 
 var ViewModel = function() {
-	// initialisation
+	// initialise locations
 	var self = this;
 	this.initLocations = ko.observableArray([]);
 	locModel.locations.forEach(function(locItem) {
 		self.initLocations.push( new Location(locItem) );
 	});
-	// filter by text input
+	
+	//initialise markers
 	locModel.markers = ko.observableArray();
 
 	this.initMarkers = ko.computed(function() {
@@ -259,6 +249,7 @@ var ViewModel = function() {
 		locModel.markers(updatedMarkers);
 	}, this);
 
+	// filter by text input
 	this.textFilterInput = ko.observable("");
 	this.formatTextInput = function(filterString) {
 		var output = [];
@@ -357,11 +348,13 @@ var ViewModel = function() {
 		if (!location.api() || !this.api()) {
 			self.foursquare(location || this);
 		} else {
-			openMarker(location.id() || this.id());
+			openInfoWindow(location.id() || this.id());
 		};
 		self.currentLoc(location || this);
 	};
-	this.foursquare = function (location) { // WE WERE TESTING WHETHER JSON LOADS PROPERLY USING $.GETJSON
+
+	// make AJAX request to foursquare and assign data from the response to our location 
+	this.foursquare = function (location) {
 		var client_secret = "MPHRMZ13RPQTOGEHPRNLIOKKF3MHOXQDJNCEQFOITUDNRUPH"
 		var client_id = "SPDMDU0UVW1E0UZ2MW3HDJCHG0YCR1VYZX2EFZDOC4GQNHZU"
 		var fsurl = "https://api.foursquare.com/v2/venues/" + location.endpoint();
@@ -371,55 +364,24 @@ var ViewModel = function() {
 			url: fsurl,
 		};
 		$.ajax(fsAJAXSettings).done(function(response) {
-	    console.log(response.response);
-	    var venue = response.response.venue;
-	    location.address(venue.location.address);
-	    var firstTip = venue.tips.groups[0].items[0].text;
-	    location.description(firstTip);
-	    var imgSrc = venue.bestPhoto.prefix + venue.bestPhoto.width + "x" + 
-	    	venue.bestPhoto.height + venue.bestPhoto.suffix;
-	    location.imgSrc(imgSrc);
-	    //add marker code
+			var venue = response.response.venue;
+			location.address(venue.location.address);
+			if (venue.bestPhoto) {
+			var imgSrc = venue.bestPhoto.prefix + venue.bestPhoto.width + "x" + 
+				venue.bestPhoto.height + venue.bestPhoto.suffix;
+			location.imgSrc(imgSrc);
+			} else {
+				location.imgSrc(false);
+			};
+
+		    var marker = locModel.markers()[location.id()-1];
+		    var firstTip = venue.tips.groups[0].items[0].text;
+		    var description = "<p>" + firstTip + "<p>";
+		    marker.infowindow.setContent(marker.infowindow.content + description);
+		    openInfoWindow(location.id());
+		    location.api(true);
 	    });
 	};
 };
-
-// var APIVM = {
-// 	wikipedia: function (id) { // When you've actually got API data, you can get round HTML strings
-// 		var location = locModel.locations[id-1];
-// 		var marker = locModel.markers[id-1];
-// 		var wikiRequestTimeout = setTimeout(function () {
-// 	    	console.log("<p>failed to get wikipedia resources</p>");
-// 	    }, 8000);
-
-// 	    var wikiurl = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
-// 	    	location.endpoint + "&format=json"; //&callback=wikiCallback
-// 	    var wikiAJAXSettings = {
-// 	    	url: wikiurl,
-// 	    	dataType: "jsonp",
-// 	    };
-// 	    var content = $.ajax(wikiAJAXSettings).done(function(response) {
-// 	  //   	var articles = response[1];
-// 			// for (var i = 0; i < articles.length; i++) {
-// 			// 	var article = articles[i];
-// 			// 	var url = 'http://en.wikipedia.org/wiki/' + article;
-// 			// 	$wikiElem.append('<li><a href="' + url + '">' + article +
-// 	  //   			'</a></li>');
-// 			// };
-// 			var html = "<h3>" + response[1][0] + "</h3>";
-// 			html += "<p>" + response[2][0] + "</p>";
-// 			html += "<a href='" + response[3][0] + "'>";
-// 			html += response[1][0] +  " on Wikipedia</a>";
-// 			marker.infowindow.setContent(html);
-// 			openMarker(id);
-// 			$('#current-location').find('.description').text(response[2][0]);
-// 			location.api = html;
-// 			clearTimeout(wikiRequestTimeout);
-// 			return html;
-// 	    });
-// 	    return content;
-// 	},
-	
-// };
 
 ko.applyBindings( new ViewModel() );

@@ -10,8 +10,10 @@
 	</div>
 	<div id="overlay">
 		<div id="current-location" data-bind="with: currentLoc">
-			<img id="current-location-img"
-			data-bind="attr: {src: imgSrc, alt: imgAlt}" style="max-width: 200px;">
+			<div data-bind="if: imgSrc">
+				<img id="current-location-img"
+				data-bind="attr: {src: imgSrc, alt: imgAlt}" style="max-width: 200px;">
+			</div>
 			<h2 data-bind="text: name"></h2>
 			<p data-bind="text: type"></p>
 			<div data-bind="foreach: keywords">
