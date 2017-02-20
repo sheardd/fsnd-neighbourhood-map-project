@@ -356,9 +356,8 @@ var ViewModel = function() {
 		if (location.id !== 0 ) {
 			if (!location.api()) {
 				self.foursquare(location);
-			} else {
-				openInfoWindow(location.id());
 			};
+			openInfoWindow(location.id());
 		};
 		self.currentLoc(location);
 	};
@@ -373,6 +372,7 @@ var ViewModel = function() {
 		var fsAJAXSettings = {
 			url: fsurl,
 		};
+		var marker = locModel.markers()[location.id()-1];
 		$.ajax(fsAJAXSettings).done(function(response) {
 			var venue = response.response.venue;
 			location.address(venue.location.address);
@@ -383,16 +383,26 @@ var ViewModel = function() {
 			} else {
 				location.imgSrc(false);
 			};
-		    var marker = locModel.markers()[location.id()-1];
 		    var firstTip = venue.tips.groups[0].items[0].text;
 		    var description = "<p>" + firstTip + "<p>";
 		    var locUrl = venue.canonicalUrl;
 		    description += "<div><p><a href='" + locUrl + "'>Find " +
 		    	location.name() + " on foursquare</a></p><p><a href=" + 
 		    	"'https://www.foursquare.com'>Powered by foursquare</a></p>";
+		    description = "<div class='info-container'>" + description +
+		    	"</div>";
 		    marker.infowindow.setContent(marker.infowindow.content + description);
-		    openInfoWindow(location.id());
+		    // openInfoWindow(location.id());
 		    location.api(true);
+	    }).fail(function(response) {
+	    	console.log(response);
+	    	var errorMsg = "There was a problem fetching data from " +
+	    		"foursquare. Please check you are connected to the internet" +
+	    		" and try again.";
+    		location.imgSrc('img/lost.jpg');
+	    	location.imgAlt(errorMsg);
+    		errorMsg = "<div class='info-container'><p><b>" + errorMsg + "</b></p></div>";
+	    	marker.infowindow.setContent(marker.infowindow.content + errorMsg);
 	    });
 	};
 };
