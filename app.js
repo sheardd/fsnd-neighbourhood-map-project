@@ -1,9 +1,10 @@
 var map;
-
+var google;
 var gMapsInit = function() {
+	google = google;
 	var truro = new google.maps.LatLng(50.263197, -5.051041);
 	map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 15,
+		zoom: 17,
 		center: truro,
 		mapTypeId: 'terrain'
 	});
@@ -56,15 +57,20 @@ function newInfoWindow(location) {
 
 function openInfoWindow(id) {
 	var currentMarker = locModel.markers()[id-1];
-		locModel.markers().forEach(function(marker) {
-			if (currentMarker === marker) {
-				marker.infowindow.opened = true;
-				marker.infowindow.open(map, marker);
-			} else {
-				marker.infowindow.opened = false;
-				marker.infowindow.close();
-			};
-		})
+	locModel.markers().forEach(function(marker) {
+		if (currentMarker === marker) {
+			marker.infowindow.opened = true;
+			// MARKER ANIMATION HERE
+			window.setTimeout(function() {
+				marker.setAnimation(null);
+			}, 2850);
+			marker.setAnimation(google.maps.Animation.BOUNCE);
+			marker.infowindow.open(map, marker);
+		} else {
+			marker.infowindow.opened = false;
+			marker.infowindow.close();
+		};
+	});
 };
 
 var locModel = {
@@ -214,7 +220,6 @@ var Location = function(data) {
 	this.keywords = ko.observableArray(data.keywords);
 	this.id = ko.observable(data.id);
 	this.api = ko.observable(data.api);
-	// this.hasWiki = ko.observable(data.hasWiki);
 	this.endpoint = ko.observable(data.endpoint);
 };
 
@@ -349,13 +354,13 @@ var ViewModel = function() {
 	this.currentLoc = ko.observable();
 	this.setCurrentLoc = function(location) {
 		if (location.id !== 0 ) {
-			if (!location.api() || !this.api()) {
-				self.foursquare(location || this);
+			if (!location.api()) {
+				self.foursquare(location);
 			} else {
-				openInfoWindow(location.id() || this.id());
+				openInfoWindow(location.id());
 			};
 		};
-		self.currentLoc(location || this);
+		self.currentLoc(location);
 	};
 
 	// make AJAX request to foursquare and assign data from the response to our location 
@@ -378,10 +383,13 @@ var ViewModel = function() {
 			} else {
 				location.imgSrc(false);
 			};
-
 		    var marker = locModel.markers()[location.id()-1];
 		    var firstTip = venue.tips.groups[0].items[0].text;
 		    var description = "<p>" + firstTip + "<p>";
+		    var locUrl = venue.canonicalUrl;
+		    description += "<div><p><a href='" + locUrl + "'>Find " +
+		    	location.name() + " on foursquare</a></p><p><a href=" + 
+		    	"'https://www.foursquare.com'>Powered by foursquare</a></p>";
 		    marker.infowindow.setContent(marker.infowindow.content + description);
 		    openInfoWindow(location.id());
 		    location.api(true);
