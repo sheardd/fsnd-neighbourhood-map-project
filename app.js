@@ -1,21 +1,45 @@
+var jQueryTimeout = setTimeout(function() {
+	var error = "There was a problem loading jQuery. Please check your " +
+		"internet connection and try again.";
+	var errorElem = document.createTextNode(error);
+	document.body.prepend(errorElem);
+}, 8000);
+
+$(function() {
+	clearTimeout(jQueryTimeout);
+});
+
+var googleTimeout = setTimeout(function() {
+	var errorMsg = "There was a problem loading Google Maps. Please " +
+		"check your internet connection and try again";
+	$('#map').text(errorMsg);
+}, 8000);
+
 var map;
 var google;
 var gMapsInit = function() {
-	google = google;
-	var truro = new google.maps.LatLng(50.263197, -5.051041);
-	map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 17,
-		center: truro,
-		mapTypeId: 'terrain'
-	});
-	google.maps.InfoWindow.prototype.opened = false;
-	var markerArray = []
-	for (var i = 0; i < locModel.locations.length; i++) {
-		var marker = createMarker(google, map, locModel.locations[i]);
-		markerArray.push(marker);
-	};
-	locModel.markers(markerArray);
-	map.center = truro;
+	clearTimeout(googleTimeout);
+	GoogleVM.init();
+};
+
+var GoogleVM = {
+	init: function() {
+		google = google;
+		var truro = new google.maps.LatLng(50.263197, -5.051041);
+		map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 17,
+			center: truro,
+			mapTypeId: 'terrain'
+		});
+		google.maps.InfoWindow.prototype.opened = false;
+		var markerArray = []
+		for (var i = 0; i < locModel.locations.length; i++) {
+			var marker = createMarker(google, map, locModel.locations[i]);
+			markerArray.push(marker);
+		};
+		locModel.markers(markerArray);
+		map.center = truro;
+	}
 };
 
 function createMarker(google, map, location) {
@@ -392,7 +416,6 @@ var ViewModel = function() {
 		    description = "<div class='info-container'>" + description +
 		    	"</div>";
 		    marker.infowindow.setContent(marker.infowindow.content + description);
-		    // openInfoWindow(location.id());
 		    location.api(true);
 	    }).fail(function(response) {
 	    	console.log(response);
