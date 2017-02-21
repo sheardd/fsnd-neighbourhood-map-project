@@ -19,31 +19,6 @@ var ViewModel = function() {
 	locModel.locations.forEach(function(locItem) {
 		self.initLocations.push( new Location(locItem) );
 	});
-	
-	//initialise markers
-	// locModel.markers = ko.observableArray();
-
-	// this.markerListeners = function() {
-	// 	console.log("markerListeners called successfully");
-	// 	var updatedMarkers = [];
-	// 	for (var i = 0; i < locModel.markers.length; i ++) {
-	// 		var marker = locModel.markers[i];
-	// 		// var location = self.initLocations()[i];
-	// 		// marker.addListener('click', (function(marker, location) {
-	// 		// 	if (!marker.infowindow.opened) {
-	// 		// 		return function() {
-	// 		// 			self.setCurrentLoc(location);
-	// 		// 		};
-	// 		// 	};
-	// 		// })(marker, location));
-	// 		// marker.set("type", "point");
-	// 		// var markerNum = parseInt([i]) + 1;
-	// 		// marker.set("id", "marker-" + markerNum)
-	// 		updatedMarkers.push(marker)
-	// 	};
-	// 	locModel.markers = updatedMarkers;
-	// };
-
 	// filter by text input
 	this.textFilterInput = ko.observable("");
 	this.formatTextInput = function(filterString) {
@@ -127,7 +102,6 @@ var ViewModel = function() {
 			};
 			results.push(noMatches);
 			self.currentLoc(noMatches);
-			// FIGURE OUT HOW TO SET THIS TO CURRENTLOC WITHOUT REMOVING OBSERVABLES - MIGHT WORK AS IS?
 			return results;
 		} else {
 			// remove duplicate results based on Christian Landgren's solution:
