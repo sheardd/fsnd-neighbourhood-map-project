@@ -6,7 +6,6 @@
 </head>
 <body>
 	<div id="map" style="height: 400px"> <!-- change to 100vh to get all locs onscreen -->
-		<!-- Our Map Container -->
 	</div>
 	<div id="overlay">
 		<div id="current-location" data-bind="with: currentLoc">
@@ -51,7 +50,10 @@
 	</div>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="js/lib/knockout-3.4.1.js"></script>
-	<script src="app.js"></script>
+	<script src="js/model/model.js"></script>
+	<script src="js/viewmodel/viewmodel.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/viewmodel/googleviewmodel.js"></script>
   <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1TZRJK7_lN0GZhEDga7vPu8pm_v7qWIQ&callback=gMapsInit">
   </script>
