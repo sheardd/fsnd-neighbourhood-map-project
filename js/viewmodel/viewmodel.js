@@ -1,3 +1,5 @@
+// Used to create our location objects, by assigning model data to observables
+// that we can present on the page through our data bindings
 var Location = function(data) {
 	this.name = ko.observable(data.name);
 	this.address = ko.observable(data.address);
@@ -12,20 +14,39 @@ var Location = function(data) {
 	this.endpoint = ko.observable(data.endpoint);
 };
 
+// The ViewModel is the nerve center of our application; it creates all the
+// observables we need to render data dynamically on the page. It then uses
+// these observables to filter which ones should be rendered based on their
+// type and the given keywords. Specific detail of each stage is given by the
+// relevant helper functions.
 var ViewModel = function() {
-	// initialise locations
+	// SETUP
+	// assign self to this for later reference, initialise our baseline
+	// initLocations array, and populate it with location objects with
+	// observable properties. This will be returned as our default result if
+	// there are no filters to be applied to it by our filteredLocations
+	// observable.
+
 	var self = this;
 	this.initLocations = ko.observableArray([]);
 	locModel.locations.forEach(function(locItem) {
 		self.initLocations.push( new Location(locItem) );
 	});
-	// filter by text input
+
+	// FILTERS
+	// Create our textFilterInput variable, that will be updated by keypress
+	// from our input box, and used to apply keyword filters. the
+	// formatTextInput will be called as part of filteredLocations to
+	// standardise text input for accurate comparison against location keywords.
+	// It takes in the given string of text input, splits it into an array
+	// based on commas, which it then iterates over to remove commas and convert
+	// to uppercase, before returning the formatted array.
+
 	this.textFilterInput = ko.observable("");
 	this.formatTextInput = function(filterString) {
 		var output = [];
 		var filterArray = filterString.split(",");
-		 // filter on commas first to give us keyword phrases
-		filterArray.forEach(function(phrase) { // tidy up our keyword phrases to filter on
+		filterArray.forEach(function(phrase) {
 			phrase = phrase.trim()
 			phrase = phrase.replace(",", "");
 			phrase = phrase.toUpperCase();
@@ -33,15 +54,27 @@ var ViewModel = function() {
 		});
 		return output;
 	};
-	// filter by checkbox input
+
+	// Our variable for storing checked checkbox values; this shouldn't need
+	// formatting in the same way as above, since these values are hardcoded
+	// and preformatted.
+
 	this.checkboxFilterInput = ko.observableArray([]);
-	// Our filter function used by both filter processes
+
+	// Our main filtering function. It takes a string denoting the location
+	// property on which to filter, an array of locations to check, and an
+	// array of filter terms on which to base our filtering. We begin with an 
+	// empty results array, to which we add matched locations. We then hide
+	// all markers To get matches,
+	// we loop over the locations, checking through all of our given filters on
+	// each one (checking before doing so whether the filters pertain to type
+	// or location keywords such as cuisine). In the case of keywords, we
+	// check if the filter is included inside of the location's (allowing us
+	// to return results even if the user only types in part of a word),
+	// whereas type simply checks for an identical match. Then returns the
+	// matches to filteredLocations.
 	this.filter = function(property, locArray, filterArray) {
 		var results = [];
-		locModel.markers.forEach(function(marker) {
-			marker.setVisible(false);
-			marker.infowindow.close();
-		});
 		locArray.forEach(function(location) {
 			var marker = locModel.markers[location.id() - 1];
 			filterArray.forEach(function(filter) {
@@ -60,38 +93,50 @@ var ViewModel = function() {
 				};
 			});
 		});
-
-		for (var i = 0; i < results.length; i++) {
-			var locationId = results[i].id();
-			for (var j = 0; j < locModel.markers.length; j++) {
-				var marker = locModel.markers[j];
-				var markerId = parseInt(marker.id.substr(7));
-				if (locationId === markerId) {
-					marker.setVisible(true);
-				};
-			};
-		};
 		return results;
 	};
 
-	// Start with full results (either way), and if filters are given, refine
-	// results first on broad type, then specific keywords
+	// Our primary observable for locations, the output of which is what
+	// actually gets used in the view. Assigned as a computed variable,
+	// beginning by hiding all markers and fetching an array of all given
+	// locations. If either of our filter input observables hold values, call
+	// filter on our results array and re-assign its value to the output. If no
+	// matches are returned, call noMatches, and exit the function. Otherwise,
+	// check our results array for unique values, and assign them to uniqueResults
+	// to filter out duplicate results, then pass these uniqueResults to
+	// GoogleVM to redisplay their markers. If no filters have been given, then
+	// at this point uniqueResults will contain all original locations and all
+	// markers will be displayed once again. We finally return uniqueResults,
+	// which will then be displayed in the view using our data-bindings.
+
 	this.filteredLocations = ko.computed(function(){
 		var results = self.initLocations();
-		locModel.markers.forEach(function(marker) {
-			marker.setVisible(true);
-		});
+		GoogleVM.hideAllMarkers();
 		if (self.checkboxFilterInput().length > 0) {
-			// if there are checkbox filters, refine our results variable using them
 			results = self.filter('type', results, self.checkboxFilterInput());
 		};
 		if (self.textFilterInput() !== "") {
-			// if there are keyword filters, refine our results variable using them
 			var textFilterArray = self.formatTextInput(self.textFilterInput());
 			results = self.filter('keywords', results, textFilterArray);
 		};
 		if (results.length === 0) {
-			var noMatches = {
+			this.noMatches()
+			return results;
+		} else {
+			var uniqueResults = results.reduce(function(filteredResults,result){
+				if (filteredResults.indexOf(result) < 0 ) filteredResults.push(result);
+				return filteredResults;
+			},[]);
+			GoogleVM.showMarkers(uniqueResults);
+			return uniqueResults;
+		};
+	}, this);
+
+	// this simply creates a one-off non-observable object to be passed to
+	// currentLoc in the event that no results match criteria given when filtering.
+
+	this.noMatches = function() {
+		var noMatches = {
 				"name": "No Matches",
 				"address": "Looks like nothing matches that search",
 				"imgSrc": "img/lost.jpg",
@@ -100,74 +145,36 @@ var ViewModel = function() {
 				"keywords": [''],
 				"id": 0,
 			};
-			results.push(noMatches);
 			self.currentLoc(noMatches);
-			return results;
-		} else {
-			// remove duplicate results based on Christian Landgren's solution:
-			// http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array
-			var uniqueResults = results.reduce(function(filteredResults,result){
-				if (filteredResults.indexOf(result) < 0 ) filteredResults.push(result);
-				return filteredResults;
-			},[]);
-			// return our results 
-			return uniqueResults;
-		};
-	}, this);
-	// define currentLoc and the function to set it
+	};
+
+	// Define currentLoc as an observable to bind to the view. To assign it,
+	// we can either click on a location on our list in the view, or a marker
+	// in the map. The former uses knockout's click binding to call it and pass,
+	// in the location, while the marker uses an event listener to call it and
+	// pass in the location assigned to it in the listener. Either way, we first
+	// check to see if an api call has already been made for that location. If
+	// it has, skip straight to calling GoogleVM.openInfoWindow() based on the
+	// location's id. If not, pass the location to foursquareVM to populate the
+	// location's InfoWindow and information with an AJAX call to foursquare, 
+	// and then call openInfoWindow() now its data has been updated. Finally,
+	// assign the location the currentLoc observable to update currentLoc in
+	// the view.
+
 	this.currentLoc = ko.observable();
 	this.setCurrentLoc = function(location) {
 		if (location.id !== 0 ) {
 			if (!location.api()) {
-				self.foursquare(location);
+				foursquare.call(location);
 			};
 			GoogleVM.openInfoWindow(location.id());
 		};
 		self.currentLoc(location);
 	};
-
-	// make AJAX request to foursquare and assign data from the response to our location 
-	this.foursquare = function (location) {
-		var client_secret = "MPHRMZ13RPQTOGEHPRNLIOKKF3MHOXQDJNCEQFOITUDNRUPH"
-		var client_id = "SPDMDU0UVW1E0UZ2MW3HDJCHG0YCR1VYZX2EFZDOC4GQNHZU"
-		var fsurl = "https://api.foursquare.com/v2/venues/" + location.endpoint();
-		fsurl += "?client_id=" + client_id + "&client_secret=" + client_secret;
-		fsurl += "&v=20170218&m=foursquare"
-		var fsAJAXSettings = {
-			url: fsurl,
-		};
-		var marker = locModel.markers[location.id()-1];
-		$.ajax(fsAJAXSettings).done(function(response) {
-			var venue = response.response.venue;
-			location.address(venue.location.address);
-			if (venue.bestPhoto) {
-			var imgSrc = venue.bestPhoto.prefix + venue.bestPhoto.width + "x" + 
-				venue.bestPhoto.height + venue.bestPhoto.suffix;
-			location.imgSrc(imgSrc);
-			} else {
-				location.imgSrc(false);
-			};
-		    var firstTip = venue.tips.groups[0].items[0].text;
-		    var description = "<p>" + firstTip + "<p>";
-		    var locUrl = venue.canonicalUrl;
-		    description += "<div><p><a href='" + locUrl + "'>Find " +
-		    	location.name() + " on foursquare</a></p><p><a href=" + 
-		    	"'https://www.foursquare.com'>Powered by foursquare</a></p>";
-		    description = "<div class='info-container'>" + description +
-		    	"</div>";
-		    marker.infowindow.setContent(marker.infowindow.content + description);
-		    location.api(true);
-	    }).fail(function(response) {
-	    	console.log(response);
-	    	var errorMsg = "There was a problem fetching data from " +
-	    		"foursquare. Please check you are connected to the internet" +
-	    		" and try again.";
-    		location.imgSrc('img/lost.jpg');
-	    	location.imgAlt(errorMsg);
-    		errorMsg = "<div class='info-container'><p><b>" + errorMsg + "</b></p></div>";
-	    	marker.infowindow.setContent(marker.infowindow.content + errorMsg);
-	    });
-	};
 };
 
+// Create our ViewModel before assigning its bindings to knockout. This line is
+// is super important, as without it none of our calls to ViewModel functions
+// from GoogleVM will work (as ViewModel won't be created otherwise until its
+// bindings are assigned in app.js).
 var VM = new ViewModel();

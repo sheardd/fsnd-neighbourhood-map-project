@@ -36,6 +36,24 @@ var GoogleVM = {
 			marker.set("id", "marker-" + markerNum)
 		return marker;
 	},
+	showMarkers: function(locArray) {
+		for (var i = 0; i < locArray.length; i++) {
+			var locationId = locArray[i].id();
+			for (var j = 0; j < locModel.markers.length; j++) {
+				var marker = locModel.markers[j];
+				var markerId = parseInt(marker.id.substr(7));
+				if (locationId === markerId) {
+					marker.setVisible(true);
+				};
+			};
+		};
+	},
+	hideAllMarkers: function(){
+		locModel.markers.forEach(function(marker) {
+			marker.setVisible(false);
+			marker.infowindow.close();
+		});
+	},
 	newInfoWindow: function(location, google) {
 		var infowindow = new google.maps.InfoWindow({
 			content: "<h4>" + location.name() + "</h4>"
