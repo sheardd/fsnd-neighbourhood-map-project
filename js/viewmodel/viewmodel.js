@@ -1,5 +1,6 @@
 // Used to create our location objects, by assigning model data to observables
 // that we can present on the page through our data bindings
+
 var Location = function(data) {
 	this.name = ko.observable(data.name);
 	this.address = ko.observable(data.address);
@@ -19,6 +20,7 @@ var Location = function(data) {
 // these observables to filter which ones should be rendered based on their
 // type and the given keywords. Specific detail of each stage is given by the
 // relevant helper functions.
+
 var ViewModel = function() {
 	// SETUP
 	// assign self to this for later reference, initialise our baseline
@@ -148,6 +150,7 @@ var ViewModel = function() {
 			self.currentLoc(noMatches);
 	};
 
+	// SET CURRENT LOCATION
 	// Define currentLoc as an observable to bind to the view. To assign it,
 	// we can either click on a location on our list in the view, or a marker
 	// in the map. The former uses knockout's click binding to call it and pass,
@@ -165,7 +168,7 @@ var ViewModel = function() {
 	this.setCurrentLoc = function(location) {
 		if (location.id !== 0 ) {
 			if (!location.api()) {
-				foursquare.call(location);
+				foursquareVM.call(location);
 			};
 			GoogleVM.openInfoWindow(location.id());
 		};
