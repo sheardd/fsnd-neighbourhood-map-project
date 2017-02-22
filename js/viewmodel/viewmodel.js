@@ -35,6 +35,20 @@ var ViewModel = function() {
 		self.initLocations.push( new Location(locItem) );
 	});
 
+	this.toggleNav = function() {
+		console.log("toggleNav called");
+		var overlay = $('#overlay');
+		if (overlay.hasClass('show-nav')) {
+			console.log("nav hidden");
+			overlay.removeClass('show-nav');
+			overlay.addClass('hide-nav');
+		} else {
+			console.log("nav revealed");
+			overlay.removeClass('hide-nav');
+			overlay.addClass('show-nav');
+		};
+	};
+
 	// FILTERS
 	// Create our textFilterInput variable, that will be updated by keypress
 	// from our input box, and used to apply keyword filters. the

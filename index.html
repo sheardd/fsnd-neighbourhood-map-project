@@ -5,17 +5,19 @@
 	<link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
 <body>
-	<div id="map" style="height: 400px"> <!-- change to 100vh to get all locs onscreen -->
+	<div id="map" class="map">
 	</div>
-	<div id="overlay">
-		<div id="current-location" data-bind="with: currentLoc">
+
+	<div id="overlay" class="container nav hide-nav">
+		<button data-bind="click: toggleNav" id="nav-button">Click for locations</button>
+		<div class="" id="current-location" data-bind="with: currentLoc">
 			<div data-bind="if: imgSrc">
-				<img id="current-location-img"
+				<img class="featured-img" id="current-location-img"
 				data-bind="attr: {src: imgSrc, alt: imgAlt}" style="max-width: 200px;">
 			</div>
 			<h2 data-bind="text: name"></h2>
 			<p data-bind="text: type"></p>
-			<div data-bind="foreach: keywords">
+			<div class="flex-row" data-bind="foreach: keywords">
 				<span data-bind="text: $data"></span>
 			</div>
 			<p data-bind="text: address"></p>
@@ -36,8 +38,8 @@
 			</div>
 		</div>
 		<div id="list-container">
-			<ul id="locations-list" data-bind="foreach: filteredLocations">
-				<li><strong data-bind="text: name, click: $parent.setCurrentLoc"></strong>
+			<ul id="locations-list" data-bind="foreach: filteredLocations" class="item-list">
+				<li class="list-entry"><strong data-bind="text: name, click: $parent.setCurrentLoc"></strong>
 				<p data-bind="text: type"></p>
 				<div>
 					- <span data-bind="foreach: keywords">
@@ -48,6 +50,7 @@
 			</ul>
 		</div>
 	</div>
+
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="js/lib/knockout-3.4.1.js"></script>
 	<script src="js/model/model.js"></script>

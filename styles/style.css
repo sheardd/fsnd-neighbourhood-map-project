@@ -1,3 +1,37 @@
-.hide {
-	display: none !important;
+body {
+	overflow: hidden;
+	margin: 0;
+}
+.map {
+height: 100vh;
+}
+.container {
+
+}
+.featured-img {
+
+}
+.flex-row {
+
+}
+.item-list {
+
+}
+.list-entry {
+
+}
+.nav {
+	width: 100%;
+	position: absolute;
+	background-color: rgba(255,255,255, 0.4);
+	transition: all, 1s ;
+	-webkit-transition: all, 1s;
+	overflow-y: scroll;
+	height: 40%;
+}
+.show-nav {
+	top: 60%;
+}
+.hide-nav {
+	top: 94%;
 }
