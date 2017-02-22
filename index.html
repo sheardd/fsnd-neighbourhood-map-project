@@ -9,8 +9,8 @@
 	</div>
 
 	<div id="overlay" class="container nav hide-nav">
-		<button data-bind="click: toggleNav" id="nav-button">Click for locations</button>
-		<div class="" id="current-location" data-bind="with: currentLoc">
+		<button class="nav-button" data-bind="click: toggleNav" id="nav-button">Click for locations</button>
+		<div class="margin-top-sml" id="current-location" data-bind="with: currentLoc">
 			<div data-bind="if: imgSrc">
 				<img class="featured-img" id="current-location-img"
 				data-bind="attr: {src: imgSrc, alt: imgAlt}" style="max-width: 200px;">
