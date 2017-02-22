@@ -78,7 +78,7 @@ var foursquareVM = {
 	    description += "<div><p><a href='" + locUrl + "'>Find " +
 	    	location.name() + " on foursquare</a></p><p><a href=" + 
 	    	"'https://www.foursquare.com'>Powered by foursquare</a></p>";
-	    var currentContent = "<div class='info-container'>" +
+	    var currentContent = "<div>" +
 	    	marker.infowindow.content;
 	    description += "</div>";
 	    marker.infowindow.setContent(currentContent + description);
@@ -95,7 +95,7 @@ var foursquareVM = {
     		" and try again.";
 		location.imgSrc('img/lost.jpg');
     	location.imgAlt(errorMsg);
-		errorMsg = "<div class='info-container'><p><b>" + errorMsg +
+		errorMsg = "<div><p><b>" + errorMsg +
 			"</b></p></div>";
     	marker.infowindow.setContent(marker.infowindow.content + errorMsg);
 	}
