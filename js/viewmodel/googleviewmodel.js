@@ -12,9 +12,10 @@ var GoogleVM = {
 	// can be referenced by other functions.
 
 	init: function() {
-		var truro = new google.maps.LatLng(50.263197, -5.052041);
+		var truro = new google.maps.LatLng(50.262514, -5.052041);
+		var zoom = GoogleVM.getZoom();
 		GoogleVM.map = new google.maps.Map(document.getElementById('map'), {
-			zoom: 17,
+			zoom: zoom,
 			center: truro,
 			mapTypeId: 'terrain'
 		});
@@ -25,6 +26,20 @@ var GoogleVM = {
 		};
 		GoogleVM.map.center = truro;
 		GoogleVM.truro = truro;
+	},
+
+	// This function checks the width of the client's viewport, and resizes the
+	// map accordingly. This function was not originally necessary, but after 
+	// setting the viewport, smaller screens were zoomed in too close.
+
+	getZoom: function() {
+		var width = $(window).width();
+		if (width < 768) {
+			var zoom = 16;
+		} else {
+			var zoom = 17;
+		};
+		return zoom;
 	},
 
 	// MARKER FUNCTIONS
