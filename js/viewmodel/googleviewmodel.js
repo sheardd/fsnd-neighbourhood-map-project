@@ -8,10 +8,9 @@ var GoogleVM = {
 	// in locModel (creating the property as it does so). Recenters the map
 	// when it's done (for some reason Google Maps API markers don't render
 	// properly unless the map is centered on their coordinates when created).
-	// Also stores the created map in a property on GoogleVM so it can be
-	// referenced by other functions.
+	// Also stores the created map and center in properties on GoogleVM so they
+	// can be referenced by other functions.
 
-	map: {},
 	init: function() {
 		var truro = new google.maps.LatLng(50.263197, -5.051041);
 		GoogleVM.map = new google.maps.Map(document.getElementById('map'), {
@@ -25,6 +24,7 @@ var GoogleVM = {
 			locModel.markers.push(marker);
 		};
 		GoogleVM.map.center = truro;
+		GoogleVM.truro = truro;
 	},
 
 	// MARKER FUNCTIONS
@@ -102,6 +102,14 @@ var GoogleVM = {
 		var marker = locModel.markers[id-1];
 		var latLng = marker.position;
 		GoogleVM.map.panTo(marker.position);
+	},
+
+	// A simple wrapper like the above, except that this one resets the map
+	// back to its original position. Called by ViewModel after locations have
+	// been filtered.
+
+	recenterMap: function() {
+		GoogleVM.map.panTo(GoogleVM.truro);
 	},
 
 	// INFOWINDOW FUNCTIONS

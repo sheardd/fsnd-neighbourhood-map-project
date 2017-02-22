@@ -35,6 +35,10 @@ var ViewModel = function() {
 		self.initLocations.push( new Location(locItem) );
 	});
 
+	// Called by the nav-button to show or hide our list of locations, using
+	// absolute positioning and "top". When clicked, simply swaps one
+	// class for the other.
+
 	this.toggleNav = function() {
 		var overlay = $('#overlay');
 		if (overlay.hasClass('show-nav')) {
@@ -86,6 +90,7 @@ var ViewModel = function() {
 	// to return results even if the user only types in part of a word),
 	// whereas type simply checks for an identical match. Then returns the
 	// matches to filteredLocations.
+
 	this.filter = function(property, locArray, filterArray) {
 		var results = [];
 		locArray.forEach(function(location) {
@@ -120,7 +125,8 @@ var ViewModel = function() {
 	// GoogleVM to redisplay their markers. If no filters have been given, then
 	// at this point uniqueResults will contain all original locations and all
 	// markers will be displayed once again. We finally return uniqueResults,
-	// which will then be displayed in the view using our data-bindings.
+	// which will then be displayed in the view using our data-bindings,
+	// and recenter the map to display the filtered results clearly.
 
 	this.filteredLocations = ko.computed(function(){
 		var results = self.initLocations();
@@ -133,7 +139,7 @@ var ViewModel = function() {
 			results = self.filter('keywords', results, textFilterArray);
 		};
 		if (results.length === 0) {
-			this.noMatches()
+			self.noMatches()
 			return results;
 		} else {
 			var uniqueResults = results.reduce(function(filteredResults,result){
@@ -141,6 +147,12 @@ var ViewModel = function() {
 				return filteredResults;
 			},[]);
 			GoogleVM.showMarkers(uniqueResults);
+			if (GoogleVM.map) {
+				GoogleVM.recenterMap();
+			};
+			if (self.clearCurrentLoc) {
+				self.clearCurrentLoc();
+			};
 			return uniqueResults;
 		};
 	}, this);
@@ -185,6 +197,13 @@ var ViewModel = function() {
 			GoogleVM.openInfoWindow(location.id());
 		};
 		self.currentLoc(location);
+	};
+
+	// Wipes currentLoc, hiding the old currentLoc from the view when a new
+	// search is made.
+
+	this.clearCurrentLoc = function() {
+		self.currentLoc(null);
 	};
 };
 

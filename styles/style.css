@@ -1,13 +1,17 @@
 body {
 	overflow: hidden;
 	margin: 0;
-	font-family: "Roboto", Arial;
+	font-family: 'Roboto', Arial;
 }
 input {
 	margin-left: 14px;
 }
+input[type="text"] {
+	width: 30%;
+}
 label {
 	margin: auto 10px;
+	width: 100%;
 }
 ul {
 	list-style: none;
@@ -16,39 +20,33 @@ ul {
 .map {
 height: 100vh;
 }
-.container {
-
-}
-.list-entry {
-	border-top: 2px solid grey;
-	padding: 10px;
-	font-size: 0.8em;
-}
-.list-entry-title {
-	margin: 3px auto;
-	font-size: 1.2em;
-}
 .nav {
 	width: 100%;
 	position: absolute;
-	background-color: rgba(255,255,255, 0.6);
 	transition: all, 1s ;
 	-webkit-transition: all, 1s;
 	overflow-y: scroll;
 	height: 40%;
 }
+.yellow-bg {
+	background-color: rgba(250,232,111, 0.9);
+}
 .show-nav {
 	top: 60%;
 }
 .hide-nav {
-	top: 94%;
+	top: 100%;
 }
 .nav-button {
-	font-size: 2em;
 	margin: 30px auto;
-	width: 100%;
 	position: fixed;
-	background-color: rgba(255,255,255, 0.4);
+	z-index: 10;
+	right: 3%;
+	top: 30px;
+	color: rgb(204,85,85);
+	font-family: 'Lobster', Arial;
+	font-size: 3.5em;
+	padding: 1% 2%;
 }
 .margin-top-sml {
 	margin-top: 11%;
@@ -58,16 +56,13 @@ height: 100vh;
 	flex-wrap: nowrap;
 	width: 100%;
 	justify-content: space-between;
+	align-items: center;
 }
 .current-loc-text {
 	width: 70%;
 	display: inline-block;
 	margin-left: 5%;
 	font-size: 2em;
-}
-.current-loc-title {
-	margin-top: 0;
-	margin-bottom: 10px
 }
 .p-snippet {
 	margin: 0.5em;
@@ -85,12 +80,21 @@ height: 100vh;
 	font-size: 1.75em;
 	padding: 10px;
 }
-.info-container {
-
+.list-entry {
+	border-top: 2px solid grey;
+	padding: 10px;
+	font-size: 0.8em;
+}
+.list-entry-title {
+	margin: 3px auto;
+	font-size: 1.2em;
 }
 .keyword-array {
 	width: 100%;
 }
 .light-font {
 	font-weight: 300;
+}
+.info-container {
+
 }

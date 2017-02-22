@@ -2,16 +2,16 @@
 <html>
 <head>
 	<title>Neighbourhood Map</title>
+	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
 <body>
+	<button class="nav-button yellow-bg" data-bind="click: toggleNav"
+		id="nav-button">Show Me Round Town!</button>
 	<div id="map" class="map">
 	</div>
-
-	<div id="overlay" class="container nav hide-nav">
-		<button class="nav-button" data-bind="click: toggleNav"
-		id="nav-button">Click for locations</button>
-		<div class="margin-top-sml flex-row" id="current-location" data-bind="with: currentLoc">
+	<div id="overlay" class="nav yellow-bg hide-nav">
+		<div class="flex-row" id="current-location" data-bind="with: currentLoc">
 			<div id="current-loc-text" class="current-loc-text">
 				<h2 class="current-loc-title" data-bind="text: name"></h2>
 				<span class="light-font" data-bind="text: type"></span>
@@ -28,21 +28,25 @@
 			</div>
 		</div>
 		<div id="filter-controls" class="filter-controls">
-			<div>
+			<div id="text-filter">
 				<h3>Filter Results By Keyword</h3>
-				<label>Separate search terms with commas 
-				<input data-bind="textInput: textFilterInput"></label>
+				<div class="flex-row">
+					<label>Separate search terms with commas 
+					<input data-bind="textInput: textFilterInput"></label>
+				</div>
 			</div>
-			<div>
+			<div id="checkbox-filter">
 				<h3>Filter Results By Category</h3>
-				<label>Restaurants: 
-					<input data-bind="checked: checkboxFilterInput"
-					type="checkbox" value="Restaurant">
-				</label>
-				<label>Tourist Attractions: 
-					<input data-bind="checked: checkboxFilterInput"
-					type="checkbox" value="Tourist Attraction">
-				</label>
+				<div class="flex-row">
+					<label>Restaurants: 
+						<input data-bind="checked: checkboxFilterInput"
+						type="checkbox" value="Restaurant">
+					</label>
+					<label>Tourist Attractions: 
+						<input data-bind="checked: checkboxFilterInput"
+						type="checkbox" value="Tourist Attraction">
+					</label>
+				</div>
 			</div>
 		</div>
 		<div id="list-container">
