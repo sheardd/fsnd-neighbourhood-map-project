@@ -78,9 +78,10 @@ var foursquareVM = {
 	    description += "<div><p><a href='" + locUrl + "'>Find " +
 	    	location.name() + " on foursquare</a></p><p><a href=" + 
 	    	"'https://www.foursquare.com'>Powered by foursquare</a></p>";
-	    description = "<div class='info-container'>" + description +
-	    	"</div>";
-	    marker.infowindow.setContent(marker.infowindow.content + description);
+	    var currentContent = "<div class='info-container'>" +
+	    	marker.infowindow.content;
+	    description += "</div>";
+	    marker.infowindow.setContent(currentContent + description);
 	},
 
 	// In the event that there is an issue with reaching foursquare, assigns

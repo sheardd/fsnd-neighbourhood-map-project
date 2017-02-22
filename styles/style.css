@@ -96,5 +96,7 @@ height: 100vh;
 	font-weight: 300;
 }
 .info-container {
-
+	min-width: 300px;
+	min-height: 300px;
+	font-size: 2em;
 }
