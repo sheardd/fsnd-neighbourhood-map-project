@@ -1,6 +1,17 @@
 body {
 	overflow: hidden;
 	margin: 0;
+	font-family: "Roboto", Arial;
+}
+input {
+	margin-left: 14px;
+}
+label {
+	margin: auto 10px;
+}
+ul {
+	list-style: none;
+	padding-left: 0;
 }
 .map {
 height: 100vh;
@@ -8,17 +19,14 @@ height: 100vh;
 .container {
 
 }
-.featured-img {
-
-}
-.flex-row {
-
-}
-.item-list {
-
-}
 .list-entry {
-
+	border-top: 2px solid grey;
+	padding: 10px;
+	font-size: 0.8em;
+}
+.list-entry-title {
+	margin: 3px auto;
+	font-size: 1.2em;
 }
 .nav {
 	width: 100%;
@@ -44,4 +52,45 @@ height: 100vh;
 }
 .margin-top-sml {
 	margin-top: 11%;
+}
+.flex-row {
+	display: flex;
+	flex-wrap: nowrap;
+	width: 100%;
+	justify-content: space-between;
+}
+.current-loc-text {
+	width: 70%;
+	display: inline-block;
+	margin-left: 5%;
+	font-size: 2em;
+}
+.current-loc-title {
+	margin-top: 0;
+	margin-bottom: 10px
+}
+.p-snippet {
+	margin: 0.5em;
+	margin-left: 0;
+}
+.featured-img {
+	max-width: 40%;
+	margin-right: 5%;
+}
+.featured-img * {
+	max-width: 100%;
+	max-height: 200px;
+}
+.filter-controls {
+	font-size: 1.75em;
+	padding: 10px;
+}
+.info-container {
+
+}
+.keyword-array {
+	width: 100%;
+}
+.light-font {
+	font-weight: 300;
 }

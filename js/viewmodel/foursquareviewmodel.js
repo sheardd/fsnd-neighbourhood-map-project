@@ -73,7 +73,7 @@ var foursquareVM = {
 
 	updateInfoWindow: function(venue, location, marker) {
 		var firstTip = venue.tips.groups[0].items[0].text;
-	    var description = "<p>" + firstTip + "<p>";
+	    var description = "<p>" + firstTip + "</p>";
 	    var locUrl = venue.canonicalUrl;
 	    description += "<div><p><a href='" + locUrl + "'>Find " +
 	    	location.name() + " on foursquare</a></p><p><a href=" + 
