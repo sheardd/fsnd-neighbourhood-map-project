@@ -94,6 +94,10 @@ var GoogleVM = {
 		});
 	},
 
+	// A simple wrapper function for the map object's panTo method; uses the
+	// given id to fetch the relevant marker, and calls panTo() using its
+	// position.
+
 	panTo: function(id) {
 		var marker = locModel.markers[id-1];
 		var latLng = marker.position;
