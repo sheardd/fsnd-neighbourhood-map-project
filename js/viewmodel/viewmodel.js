@@ -36,14 +36,11 @@ var ViewModel = function() {
 	});
 
 	this.toggleNav = function() {
-		console.log("toggleNav called");
 		var overlay = $('#overlay');
 		if (overlay.hasClass('show-nav')) {
-			console.log("nav hidden");
 			overlay.removeClass('show-nav');
 			overlay.addClass('hide-nav');
 		} else {
-			console.log("nav revealed");
 			overlay.removeClass('hide-nav');
 			overlay.addClass('show-nav');
 		};
@@ -184,6 +181,7 @@ var ViewModel = function() {
 			if (!location.api()) {
 				foursquareVM.call(location);
 			};
+			GoogleVM.panTo(location.id());
 			GoogleVM.openInfoWindow(location.id());
 		};
 		self.currentLoc(location);

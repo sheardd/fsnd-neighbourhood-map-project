@@ -4,24 +4,27 @@
 var GoogleVM = {
 	// INITIALISATION
 	// First creates the main map in the view, before creating markers
-	// for every location object in VM, and pushing each one to a markers array in
-	// locModel (creating the property as it does so). Recenters the map when
-	// it's done (for some reason Google Maps API markers don't render properly
-	// unless the map is centered on their coordinates when created).
+	// for every location object in VM, and pushing each one to a markers array
+	// in locModel (creating the property as it does so). Recenters the map
+	// when it's done (for some reason Google Maps API markers don't render
+	// properly unless the map is centered on their coordinates when created).
+	// Also stores the created map in a property on GoogleVM so it can be
+	// referenced by other functions.
 
+	map: {},
 	init: function() {
 		var truro = new google.maps.LatLng(50.263197, -5.051041);
-		map = new google.maps.Map(document.getElementById('map'), {
+		GoogleVM.map = new google.maps.Map(document.getElementById('map'), {
 			zoom: 17,
 			center: truro,
 			mapTypeId: 'terrain'
 		});
 		for (var i = 0; i < VM.initLocations().length; i++) {
 			var location = VM.initLocations()[i];
-			var marker = GoogleVM.createMarker(google, map, location);
+			var marker = GoogleVM.createMarker(google, location);
 			locModel.markers.push(marker);
 		};
-		map.center = truro;
+		GoogleVM.map.center = truro;
 	},
 
 	// MARKER FUNCTIONS
@@ -39,13 +42,13 @@ var GoogleVM = {
 	// specific markers for whatever resaon later. Returns the marker to be
 	// pushed to locModel.markers.
 
-	createMarker: function(google, map, location) {
+	createMarker: function(google, location) {
 		var coords = location.coords();
 		var latLng = new google.maps.LatLng(coords[0],coords[1]);
-		map.center = latLng;
+		GoogleVM.map.center = latLng;
 		var marker = new google.maps.Marker({
 			position: latLng,
-			map: map,
+			map: GoogleVM.map,
 			title: location.name(),
 			infowindow: GoogleVM.newInfoWindow(location, google),
 		});
@@ -89,6 +92,12 @@ var GoogleVM = {
 			marker.setVisible(false);
 			marker.infowindow.close();
 		});
+	},
+
+	panTo: function(id) {
+		var marker = locModel.markers[id-1];
+		var latLng = marker.position;
+		GoogleVM.map.panTo(marker.position);
 	},
 
 	// INFOWINDOW FUNCTIONS
