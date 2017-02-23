@@ -59,23 +59,23 @@ var GoogleVM = {
 	// pushed to locModel.markers.
 
 	createMarker: function(google, location) {
-		var coords = location.coords();
+		var coords = location.coords;
 		var latLng = new google.maps.LatLng(coords[0],coords[1]);
 		GoogleVM.map.center = latLng;
 		var marker = new google.maps.Marker({
 			position: latLng,
 			map: GoogleVM.map,
-			title: location.name(),
+			title: location.name,
 			infowindow: GoogleVM.newInfoWindow(location, google),
 		});
-		marker.addListener("click", (function(marker, location) {
+		marker.addListener('click', (function(marker, location) {
 				return function() {
 					VM.setCurrentLoc(location);
 				};
 			})(marker, location));
-			marker.set("type", "point");
-			var markerNum = location.id();
-			marker.set("id", "marker-" + markerNum);
+			marker.set('type', 'point');
+			var markerNum = location.id;
+			marker.set('id', 'marker-' + markerNum);
 		return marker;
 	},
 
@@ -87,7 +87,7 @@ var GoogleVM = {
 
 	showMarkers: function(locArray) {
 		for (var i = 0; i < locArray.length; i++) {
-			var locationId = locArray[i].id();
+			var locationId = locArray[i].id;
 			for (var j = 0; j < locModel.markers.length; j++) {
 				var marker = locModel.markers[j];
 				var markerId = parseInt(marker.id.substr(7));
@@ -137,7 +137,7 @@ var GoogleVM = {
 
 	newInfoWindow: function(location, google) {
 		var infowindow = new google.maps.InfoWindow({
-			content: "<h4>" + location.name() + "</h4>"
+			content: '<h4>' + location.name + '</h4>'
 		});
 		return infowindow;
 	},

@@ -6,8 +6,8 @@ var foursquareVM = {
 	// these wouldn't be here. I did look into it but I couldn't figure it out
 	// without using something like requireJS but that seemed a bit OTT.
 	
-	CLIENT_SECRET: "MPHRMZ13RPQTOGEHPRNLIOKKF3MHOXQDJNCEQFOITUDNRUPH",
-	CLIENT_ID : "SPDMDU0UVW1E0UZ2MW3HDJCHG0YCR1VYZX2EFZDOC4GQNHZU",
+	CLIENT_SECRET: 'MPHRMZ13RPQTOGEHPRNLIOKKF3MHOXQDJNCEQFOITUDNRUPH',
+	CLIENT_ID : 'SPDMDU0UVW1E0UZ2MW3HDJCHG0YCR1VYZX2EFZDOC4GQNHZU',
 
 	// foursquareVM's primary function. Uses the given location's endpoint
 	// observable to make an AJAX request to foursquare for information on
@@ -27,21 +27,21 @@ var foursquareVM = {
 	// and the AJAX call can be re-attempted.
 
 	call: function (location) {
-		var fsurl = "https://api.foursquare.com/v2/venues/" +
-			location.endpoint() + "?client_id=" + foursquareVM.CLIENT_ID +
-			"&client_secret=" + foursquareVM.CLIENT_SECRET +
-			"&v=20170218&m=foursquare";
+		var fsurl = 'https://api.foursquare.com/v2/venues/' +
+			location.endpoint + '?client_id=' + foursquareVM.CLIENT_ID +
+			'&client_secret=' + foursquareVM.CLIENT_SECRET +
+			'&v=20170218&m=foursquare';
 		var fsAJAXSettings = {
 			url: fsurl,
 		};
-		var marker = locModel.markers[location.id()-1];
+		var marker = locModel.markers[location.id-1];
 		$.ajax(fsAJAXSettings).done(function(response) {
 			var venue = response.response.venue;
 			foursquareVM.updateLoc(venue, location);
 		    foursquareVM.updateInfoWindow(venue, location, marker);
 		    location.api(true);
 	    }).fail(function(response) {
-	    	foursquareVM.error(marker);
+	    	foursquareVM.error(location, marker);
 	    });
 	},
 
@@ -54,7 +54,7 @@ var foursquareVM = {
 	updateLoc: function(venue, location) {
 		location.address(venue.location.address);
 		if (venue.bestPhoto) {
-		var imgSrc = venue.bestPhoto.prefix + venue.bestPhoto.width + "x" + 
+		var imgSrc = venue.bestPhoto.prefix + venue.bestPhoto.width + 'x' + 
 			venue.bestPhoto.height + venue.bestPhoto.suffix;
 		location.imgSrc(imgSrc);
 		} else {
@@ -73,30 +73,32 @@ var foursquareVM = {
 
 	updateInfoWindow: function(venue, location, marker) {
 		var firstTip = venue.tips.groups[0].items[0].text;
-	    var description = "<p>" + firstTip + "</p>";
+	    var description = '<p>' + firstTip + '</p>';
 	    var locUrl = venue.canonicalUrl;
-	    description += "<div><p><a href='" + locUrl + "'>Find " +
-	    	location.name() + " on foursquare</a></p><p><a href=" + 
-	    	"'https://www.foursquare.com'>Powered by foursquare</a></p>";
-	    var currentContent = "<div>" +
+	    description += '<div><p><a href="' + locUrl + '">Find ' +
+	    	location.name + ' on foursquare</a></p><p><a href="' + 
+	    	'"https://www.foursquare.com">Powered by foursquare</a></p>';
+	    var currentContent = '<div>' +
 	    	marker.infowindow.content;
-	    description += "</div>";
+	    description += '</div>';
 	    marker.infowindow.setContent(currentContent + description);
 	},
 
 	// In the event that there is an issue with reaching foursquare, assigns
 	// a simple error message to our infowindow's content, and sets location
 	// image to the same image as our no matches object (since it works for
-	// both). 
+	// both), and updates the address field in the location object with our
+	// error to make the error extra-visible in the UI.
 
-	error: function(marker) {
-		var errorMsg = "There was a problem fetching data from " +
-    		"foursquare. Please check you are connected to the internet" +
-    		" and try again.";
+	error: function(location, marker) {
+		var errorMsg = 'There was a problem fetching data from ' +
+    		'foursquare. Please check you are connected to the internet' +
+    		' and try again.';
 		location.imgSrc('img/lost.jpg');
-    	location.imgAlt(errorMsg);
-		errorMsg = "<div><p><b>" + errorMsg +
-			"</b></p></div>";
+		location.imgAlt(errorMsg);
+    	location.address(errorMsg);
+		errorMsg = '<div><p><b>' + errorMsg +
+			'</b></p></div>';
     	marker.infowindow.setContent(marker.infowindow.content + errorMsg);
 	}
 };

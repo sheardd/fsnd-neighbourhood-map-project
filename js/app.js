@@ -1,35 +1,26 @@
-// Simple error handling for jQuery: set a timeout to append an error message
-// to the top of the page, which is cleared using the jQuery statement beneath.
-// If jQuery fails to load, clearTimeout() cannot be run, so the error message
-// should and will be loaded.
+// Simple error handling for jQuery: appends an error message to the top
+// of the page if jQuery cannot be loaded.
 
-var jQueryTimeout = setTimeout(function() {
+var jQueryError = function() {
 	var error = "There was a problem loading jQuery. Please check your " +
 		"internet connection and try again.";
 	var errorElem = document.createTextNode(error);
 	document.body.prepend(errorElem);
-}, 8000);
+};
 
-$(function() {
-	clearTimeout(jQueryTimeout);
-});
-
-// Error handling for Google Maps API: set a timeout to append an error message
-// to the map div, which will be cleared if the callback for google maps is
-// called. If gMapsInit isn't called, google maps evidently didn't load, so the
-// error message in the timeout should indeed be rendered.
-
-var googleTimeout = setTimeout(function() {
-	var errorMsg = "There was a problem loading Google Maps. Please " +
-		"check your internet connection and try again";
-	$('#map').text(errorMsg);
-}, 8000);
+// Callback function for Google Maps API: a simple wrapper function that calls
+// the GoogleVM's init() function.
 
 var gMapsInit = function() {
-	clearTimeout(googleTimeout);
 	GoogleVM.init();
 };
 
-// Fire KnockoutJS!
+// Error handling for Google Maps API: a simple error message that will be
+// appended to the map div if gMapsError is called if the Google Maps API
+// script cannot be loaded
 
-ko.applyBindings( VM );
+var gMapsError = function() {
+	var errorMsg = "There was a problem loading Google Maps. Please " +
+		"check your internet connection and try again";
+	$('#map').text(errorMsg);
+};

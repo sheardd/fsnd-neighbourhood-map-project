@@ -2,17 +2,17 @@
 // that we can present on the page through our data bindings
 
 var Location = function(data) {
-	this.name = ko.observable(data.name);
+	this.name = data.name;
 	this.address = ko.observable(data.address);
-	this.coords = ko.observable(data.coords);
+	this.coords = data.coords;
 	this.description = ko.observable(data.description);
 	this.imgSrc = ko.observable(data.imgSrc);
 	this.imgAlt = ko.observable(data.imgAlt);
-	this.type = ko.observable(data.type);
-	this.keywords = ko.observableArray(data.keywords);
-	this.id = ko.observable(data.id);
+	this.type = data.type;
+	this.keywords = data.keywords;
+	this.id = data.id;
 	this.api = ko.observable(data.api);
-	this.endpoint = ko.observable(data.endpoint);
+	this.endpoint = data.endpoint;
 };
 
 // The ViewModel is the nerve center of our application; it creates all the
@@ -40,13 +40,13 @@ var ViewModel = function() {
 	// class for the other.
 
 	this.toggleNav = function() {
-		var overlay = $("#overlay");
-		if (overlay.hasClass("show-nav")) {
-			overlay.removeClass("show-nav");
-			overlay.addClass("hide-nav");
+		var overlay = $('#overlay');
+		if (overlay.hasClass('show-nav')) {
+			overlay.removeClass('show-nav');
+			overlay.addClass('hide-nav');
 		} else {
-			overlay.removeClass("hide-nav");
-			overlay.addClass("show-nav");
+			overlay.removeClass('hide-nav');
+			overlay.addClass('show-nav');
 		}
 	};
 
@@ -59,13 +59,13 @@ var ViewModel = function() {
 	// based on commas, which it then iterates over to remove commas and convert
 	// to uppercase, before returning the formatted array.
 
-	this.textFilterInput = ko.observable("");
+	this.textFilterInput = ko.observable('');
 	this.formatTextInput = function(filterString) {
 		var output = [];
-		var filterArray = filterString.split(",");
+		var filterArray = filterString.split(',');
 		filterArray.forEach(function(phrase) {
 			phrase = phrase.trim();
-			phrase = phrase.replace(",", "");
+			phrase = phrase.replace(',', '');
 			phrase = phrase.toUpperCase();
 			output.push(phrase);
 		});
@@ -94,15 +94,15 @@ var ViewModel = function() {
 	this.filter = function(property, locArray, filterArray) {
 		var results = [];
 		locArray.forEach(function(location) {
-			var marker = locModel.markers[location.id() - 1];
+			var marker = locModel.markers[location.id - 1];
 			filterArray.forEach(function(filter) {
-				if (property === "type") {
-					if (filter === location.type()) {
+				if (property === 'type') {
+					if (filter === location.type) {
 						results.push(location);
 						return;
 					}
 				} else {
-					location.keywords().forEach(function(keyword) {
+					location.keywords.forEach(function(keyword) {
 						if (filter.length > 0 && keyword.includes(filter)) {
 							results.push(location);
 							return;
@@ -132,11 +132,11 @@ var ViewModel = function() {
 		var results = self.initLocations();
 		GoogleVM.hideAllMarkers();
 		if (self.checkboxFilterInput().length > 0) {
-			results = self.filter("type", results, self.checkboxFilterInput());
+			results = self.filter('type', results, self.checkboxFilterInput());
 		}
-		if (self.textFilterInput() !== "") {
+		if (self.textFilterInput() !== '') {
 			var textFilterArray = self.formatTextInput(self.textFilterInput());
-			results = self.filter("keywords", results, textFilterArray);
+			results = self.filter('keywords', results, textFilterArray);
 		}
 		if (results.length === 0) {
 			self.noMatches();
@@ -164,13 +164,13 @@ var ViewModel = function() {
 
 	this.noMatches = function() {
 		var noMatches = {
-				"name": "No Matches",
-				"address": "Looks like nothing matches that search",
-				"imgSrc": "img/lost.jpg",
-				"imgAlt": "Looks like nothing matches that search",
-				"type": "",
-				"keywords": [""],
-				"id": 0,
+				'name': 'No Matches',
+				'address': 'Looks like nothing matches that search',
+				'imgSrc': 'img/lost.jpg',
+				'imgAlt': 'Looks like nothing matches that search',
+				'type': '',
+				'keywords': [''],
+				'id': 0,
 			};
 			self.currentLoc(noMatches);
 	};
@@ -195,8 +195,8 @@ var ViewModel = function() {
 			if (!location.api()) {
 				foursquareVM.call(location);
 			}
-			GoogleVM.panTo(location.id());
-			GoogleVM.openInfoWindow(location.id());
+			GoogleVM.panTo(location.id);
+			GoogleVM.openInfoWindow(location.id);
 		}
 		self.currentLoc(location);
 	};
@@ -214,3 +214,7 @@ var ViewModel = function() {
 // from GoogleVM will work (as ViewModel won't be created otherwise until its
 // bindings are assigned in app.js).
 var VM = new ViewModel();
+
+// Fire KnockoutJS!
+
+ko.applyBindings( VM );

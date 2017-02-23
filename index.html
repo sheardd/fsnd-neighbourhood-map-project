@@ -4,15 +4,15 @@
 	<title>Neighbourhood Map</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="styles/style.css">
+	<link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
 	<button class="nav-button yellow-bg" data-bind="click: toggleNav"
 		id="nav-button">Show Me Round Town!</button>
 	<div id="map" class="map">
 	</div>
-	<div id="overlay" class="nav yellow-bg hide-nav">
-		<div class="flex-row" id="current-location" data-bind="with: currentLoc">
+	<nav id="overlay" class="nav yellow-bg hide-nav">
+		<article class="flex-row" id="current-location" data-bind="with: currentLoc">
 			<div id="current-loc-text" class="current-loc-text">
 				<h2 class="current-loc-title" data-bind="text: name"></h2>
 				<span class="light-font" data-bind="text: type"></span>
@@ -27,8 +27,8 @@
 				<img id="current-location-img"
 				data-bind="attr: {src: imgSrc, alt: imgAlt}">
 			</div>
-		</div>
-		<div id="filter-controls" class="filter-controls">
+		</article>
+		<section id="filter-controls" class="filter-controls">
 			<div id="text-filter">
 				<h3>Filter Results By Keyword</h3>
 				<div>
@@ -49,32 +49,35 @@
 					</label>
 				</div>
 			</div>
-		</div>
-		<div id="list-container">
+		</section>
+		<section id="list-container">
 			<ul id="locations-list" data-bind="foreach: filteredLocations">
 				<li class="list-entry">
-				<h4 class="list-entry-title" data-bind="text: name, click: $parent.setCurrentLoc">
-				</h4>
-				<span class="light-font" data-bind="text: type"></span>
-				<div class="keyword-array">
-					 - <span class="light-font" data-bind="foreach: keywords">
-						 <span data-bind="text: $data"></span> -
-					</span>
-				</div>
+				<article>
+					<h4 class="list-entry-title" data-bind="text: name, click: $parent.setCurrentLoc">
+					</h4>
+					<span class="light-font" data-bind="text: type"></span>
+					<div class="keyword-array">
+						 - <span class="light-font" data-bind="foreach: keywords">
+							 <span data-bind="text: $data"></span> -
+						</span>
+					</div>
+				</article>
 				</li>
 			</ul>
-		</div>
-	</div>
+		</section>
+	</nav>
 
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="js/lib/knockout-3.4.1.js"></script>
+	<script src="js/app.js"></script>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" onerror="jQueryError()"></script>
 	<script src="js/model/model.js"></script>
 	<script src="js/viewmodel/googleviewmodel.js"></script>
 	<script src="js/viewmodel/foursquareviewmodel.js"></script>
 	<script src="js/viewmodel/viewmodel.js"></script>
-	<script src="js/app.js"></script>
   <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1TZRJK7_lN0GZhEDga7vPu8pm_v7qWIQ&callback=gMapsInit">
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1TZRJK7_lN0GZhEDga7vPu8pm_v7qWIQ&callback=gMapsInit"
+  onerror="gMapsError()">
   </script>
 </body>
 </html>
