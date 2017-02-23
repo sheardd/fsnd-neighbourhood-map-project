@@ -40,14 +40,14 @@ var ViewModel = function() {
 	// class for the other.
 
 	this.toggleNav = function() {
-		var overlay = $('#overlay');
-		if (overlay.hasClass('show-nav')) {
-			overlay.removeClass('show-nav');
-			overlay.addClass('hide-nav');
+		var overlay = $("#overlay");
+		if (overlay.hasClass("show-nav")) {
+			overlay.removeClass("show-nav");
+			overlay.addClass("hide-nav");
 		} else {
-			overlay.removeClass('hide-nav');
-			overlay.addClass('show-nav');
-		};
+			overlay.removeClass("hide-nav");
+			overlay.addClass("show-nav");
+		}
 	};
 
 	// FILTERS
@@ -64,7 +64,7 @@ var ViewModel = function() {
 		var output = [];
 		var filterArray = filterString.split(",");
 		filterArray.forEach(function(phrase) {
-			phrase = phrase.trim()
+			phrase = phrase.trim();
 			phrase = phrase.replace(",", "");
 			phrase = phrase.toUpperCase();
 			output.push(phrase);
@@ -80,7 +80,7 @@ var ViewModel = function() {
 
 	// Our main filtering function. It takes a string denoting the location
 	// property on which to filter, an array of locations to check, and an
-	// array of filter terms on which to base our filtering. We begin with an 
+	// array of filter terms on which to base our filtering. We begin with an
 	// empty results array, to which we add matched locations. We then hide
 	// all markers To get matches,
 	// we loop over the locations, checking through all of our given filters on
@@ -96,19 +96,19 @@ var ViewModel = function() {
 		locArray.forEach(function(location) {
 			var marker = locModel.markers[location.id() - 1];
 			filterArray.forEach(function(filter) {
-				if (property === 'type') {
+				if (property === "type") {
 					if (filter === location.type()) {
 						results.push(location);
 						return;
-					};
+					}
 				} else {
 					location.keywords().forEach(function(keyword) {
 						if (filter.length > 0 && keyword.includes(filter)) {
 							results.push(location);
 							return;
-						};
-					})
-				};
+						}
+					});
+				}
 			});
 		});
 		return results;
@@ -132,29 +132,31 @@ var ViewModel = function() {
 		var results = self.initLocations();
 		GoogleVM.hideAllMarkers();
 		if (self.checkboxFilterInput().length > 0) {
-			results = self.filter('type', results, self.checkboxFilterInput());
-		};
+			results = self.filter("type", results, self.checkboxFilterInput());
+		}
 		if (self.textFilterInput() !== "") {
 			var textFilterArray = self.formatTextInput(self.textFilterInput());
-			results = self.filter('keywords', results, textFilterArray);
-		};
+			results = self.filter("keywords", results, textFilterArray);
+		}
 		if (results.length === 0) {
-			self.noMatches()
+			self.noMatches();
 			return results;
 		} else {
 			var uniqueResults = results.reduce(function(filteredResults,result){
-				if (filteredResults.indexOf(result) < 0 ) filteredResults.push(result);
+				if (filteredResults.indexOf(result) < 0 ) {
+					filteredResults.push(result)
+				};
 				return filteredResults;
 			},[]);
 			GoogleVM.showMarkers(uniqueResults);
 			if (GoogleVM.map) {
 				GoogleVM.recenterMap();
-			};
+			}
 			if (self.clearCurrentLoc) {
 				self.clearCurrentLoc();
-			};
+			}
 			return uniqueResults;
-		};
+		}
 	}, this);
 
 	// this simply creates a one-off non-observable object to be passed to
@@ -167,7 +169,7 @@ var ViewModel = function() {
 				"imgSrc": "img/lost.jpg",
 				"imgAlt": "Looks like nothing matches that search",
 				"type": "",
-				"keywords": [''],
+				"keywords": [""],
 				"id": 0,
 			};
 			self.currentLoc(noMatches);
@@ -182,7 +184,7 @@ var ViewModel = function() {
 	// check to see if an api call has already been made for that location. If
 	// it has, skip straight to calling GoogleVM.openInfoWindow() based on the
 	// location's id. If not, pass the location to foursquareVM to populate the
-	// location's InfoWindow and information with an AJAX call to foursquare, 
+	// location's InfoWindow and information with an AJAX call to foursquare,
 	// and then call openInfoWindow() now its data has been updated. Finally,
 	// assign the location the currentLoc observable to update currentLoc in
 	// the view.
@@ -192,10 +194,10 @@ var ViewModel = function() {
 		if (location.id !== 0 ) {
 			if (!location.api()) {
 				foursquareVM.call(location);
-			};
+			}
 			GoogleVM.panTo(location.id());
 			GoogleVM.openInfoWindow(location.id());
-		};
+		}
 		self.currentLoc(location);
 	};
 

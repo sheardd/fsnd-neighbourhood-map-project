@@ -6,8 +6,8 @@ var foursquareVM = {
 	// these wouldn't be here. I did look into it but I couldn't figure it out
 	// without using something like requireJS but that seemed a bit OTT.
 	
-	client_secret: "MPHRMZ13RPQTOGEHPRNLIOKKF3MHOXQDJNCEQFOITUDNRUPH",
-	client_id : "SPDMDU0UVW1E0UZ2MW3HDJCHG0YCR1VYZX2EFZDOC4GQNHZU",
+	CLIENT_SECRET: "MPHRMZ13RPQTOGEHPRNLIOKKF3MHOXQDJNCEQFOITUDNRUPH",
+	CLIENT_ID : "SPDMDU0UVW1E0UZ2MW3HDJCHG0YCR1VYZX2EFZDOC4GQNHZU",
 
 	// foursquareVM's primary function. Uses the given location's endpoint
 	// observable to make an AJAX request to foursquare for information on
@@ -28,8 +28,8 @@ var foursquareVM = {
 
 	call: function (location) {
 		var fsurl = "https://api.foursquare.com/v2/venues/" +
-			location.endpoint() + "?client_id=" + foursquareVM.client_id +
-			"&client_secret=" + foursquareVM.client_secret +
+			location.endpoint() + "?client_id=" + foursquareVM.CLIENT_ID +
+			"&client_secret=" + foursquareVM.CLIENT_SECRET +
 			"&v=20170218&m=foursquare";
 		var fsAJAXSettings = {
 			url: fsurl,
@@ -59,7 +59,7 @@ var foursquareVM = {
 		location.imgSrc(imgSrc);
 		} else {
 			location.imgSrc(false);
-		};
+		}
 	},
 
 	// Again, takes venue from foursquare and given location, as well as the

@@ -14,37 +14,38 @@ var GoogleVM = {
 	init: function() {
 		var truro = new google.maps.LatLng(50.262514, -5.052041);
 		var zoom = GoogleVM.getZoom();
-		GoogleVM.map = new google.maps.Map(document.getElementById('map'), {
+		GoogleVM.map = new google.maps.Map(document.getElementById("map"), {
 			zoom: zoom,
 			center: truro,
-			mapTypeId: 'terrain'
+			mapTypeId: "terrain"
 		});
 		for (var i = 0; i < VM.initLocations().length; i++) {
 			var location = VM.initLocations()[i];
 			var marker = GoogleVM.createMarker(google, location);
 			locModel.markers.push(marker);
-		};
+		}
 		GoogleVM.map.center = truro;
 		GoogleVM.truro = truro;
 	},
 
 	// This function checks the width of the client's viewport, and resizes the
-	// map accordingly. This function was not originally necessary, but after 
+	// map accordingly. This function was not originally necessary, but after
 	// setting the viewport, smaller screens were zoomed in too close.
 
 	getZoom: function() {
 		var width = $(window).width();
+    var zoom = "";
 		if (width < 768) {
-			var zoom = 16;
+			zoom = 16;
 		} else {
-			var zoom = 17;
-		};
+			zoom = 17;
+		}
 		return zoom;
 	},
 
 	// MARKER FUNCTIONS
 	// Creates a marker using the given google object and library, as well as
-	// the specific location. Fetches the necessary coordinates from location, 
+	// the specific location. Fetches the necessary coordinates from location,
 	// centers the map over their latlng object (see above), before creating
 	// the marker object. In doing so, calls newInfoWindow to create an
 	// infowindow relating to that specific location and assigning it as a
@@ -67,14 +68,14 @@ var GoogleVM = {
 			title: location.name(),
 			infowindow: GoogleVM.newInfoWindow(location, google),
 		});
-		marker.addListener('click', (function(marker, location) {
+		marker.addListener("click", (function(marker, location) {
 				return function() {
 					VM.setCurrentLoc(location);
 				};
 			})(marker, location));
 			marker.set("type", "point");
 			var markerNum = location.id();
-			marker.set("id", "marker-" + markerNum)
+			marker.set("id", "marker-" + markerNum);
 		return marker;
 	},
 
@@ -92,9 +93,9 @@ var GoogleVM = {
 				var markerId = parseInt(marker.id.substr(7));
 				if (locationId === markerId) {
 					marker.setVisible(true);
-				};
-			};
-		};
+				}
+			}
+		}
 	},
 
 	// Called at the start of VM.filter() to iterate over all markers, setting
@@ -159,7 +160,7 @@ var GoogleVM = {
 				marker.infowindow.open(map, marker);
 			} else {
 				marker.infowindow.close();
-			};
+			}
 		});
 	}
 };
